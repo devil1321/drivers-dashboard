@@ -1,0 +1,38 @@
+
+const faktury = [
+    {
+        id:1,
+        data:'2012/12/12',
+        link:'https://faktura.pl/pobierz',
+        kwota:1123,
+        nip:543-123-311,
+        płatność:'uber'
+    },
+    {
+        id:2,
+        data:'2012/12/12',
+        link:'https://faktura.pl/pobierz',
+        kwota:1123,
+        nip:543-123-311,
+        płatność:'bolt'
+    },
+    {
+        id:3,
+        data:'2012/12/12',
+        link:'https://faktura.pl/pobierz',
+        kwota:1123,
+        nip:543-123-311,
+        płatność:'uber'
+    },
+    {
+        id:4,
+        data:'2012/12/12',
+        link:'https://faktura.pl/pobierz',
+        kwota:1123,
+        nip:543-123-311,
+        płatność:'free-now'
+    }
+]
+export{
+    faktury
+}
