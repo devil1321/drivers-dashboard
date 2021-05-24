@@ -1,5 +1,5 @@
 
-import React from "react";
+import React,{useState} from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCashRegister, faChartLine, faCloudUploadAlt, faPlus, faRocket, faTasks, faUserShield } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Button, Dropdown, ButtonGroup } from '@themesberg/react-bootstrap';
@@ -14,6 +14,8 @@ import { Form, InputGroup } from '@themesberg/react-bootstrap';
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 export default () => {
+  const [isDodajFaktureShow,setIsDodajFaktureShow] = useState(false)
+  const [isDodajUmoweShow,setIsDodajUmoweShow] = useState(false)
   return (
     <>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
@@ -131,6 +133,7 @@ export default () => {
                     </Form.Group>
                   </Form>
                 <PageFakturyTable />
+                {isDodajFaktureShow && 
                 <Form className="mt-4">
                   <h2 className="text-center">Dodaj Fakture</h2>
                   <Form.Group className="mb-3">
@@ -172,7 +175,7 @@ export default () => {
                     <div className="mt-3">
                       <Button variant="primary" type="submit">Prześlij</Button>
                     </div>
-                </Form>
+                </Form>}
               </Tab.Pane>
 
               <Tab.Pane eventKey="rozliczenie" className="py-4">
@@ -197,6 +200,7 @@ export default () => {
 
               <Tab.Pane eventKey="umowy" className="py-4">
                 <PageUmowyTable umowy={umowy}/>
+                {isDodajUmoweShow && 
                 <Form className="mt-4">
                 <h2 className="text-center">Dodaj Umowe</h2>
                 <Form.Group className="mb-3">
@@ -258,7 +262,7 @@ export default () => {
                 <div className="mt-3">
                   <Button variant="primary" type="submit">Prześlij</Button>
                 </div>
-                </Form>
+                </Form>}
               </Tab.Pane>
             </Tab.Content>
           </Tab.Container>

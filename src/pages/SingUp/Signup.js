@@ -1,16 +1,79 @@
 
-import React from "react";
+import React,{useState,useEffect} from "react";
+import { useHistory } from 'react-router-dom'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft, faEnvelope, faUnlockAlt } from "@fortawesome/free-solid-svg-icons";
 import { faFacebookF, faGithub, faTwitter } from "@fortawesome/free-brands-svg-icons";
-import { Col, Row, Form, Card, Button, FormCheck, Container, InputGroup } from '@themesberg/react-bootstrap';
+import { Col, Row, Form, Card, Button, FormCheck, Container, InputGroup,Alert  } from '@themesberg/react-bootstrap';
 import { Link } from 'react-router-dom';
-
+import axios from 'axios'
 import { Routes } from "../../routes";
 import BgImage from "../../assets/img/illustrations/signin.svg";
 
 
 export default () => {
+  const history = useHistory()
+  const [show,setShow] = useState(false)
+  const [errors,setErrors] = useState([])
+  const [formData,setFormData] = useState({
+      email:'',
+      haslo:'',
+      haslo2:'',
+      imie:'',
+      nazwisko:'',
+      auto:'',
+      wojewodztwo:'dolnośląskie',
+      isActive:false
+  })
+  useEffect(()=>{
+    console.log(formData)
+  },[formData,errors,show])
+
+  const handleChange = (e) =>{
+      const { name , value } = e.target
+      setFormData(prevState =>({
+        ...prevState,
+        [name]:value
+      }))
+  }
+
+  const handleSubmit = () =>{
+    axios.post('http://localhost:5000/users/register',formData)
+      .then(res => setFormData({  
+        email:'',
+        haslo:'',
+        haslo2:'',
+        imie:'',
+        nazwisko:'',
+        auto:'',
+        wojewodztwo:'dolnośląskie',
+        isActive:false
+      }))
+      .catch(err => {if(err) throw err})
+      history.push('/sign-in')
+  }
+
+  const handleValidate = (e) =>{
+      e.preventDefault()
+      let event = e
+      let errors = []
+      const {  email, haslo, haslo2, imie, nazwisko, auto,wojewodztwo } = formData    
+      if(haslo !== haslo2){
+        errors.push('Hasla się rożnia')
+      }
+      if(haslo.length < 6){
+        errors.push('Hasło Musi Posiadać co najmniej 6 znaków')
+      }
+      if( email === '' || haslo === '' ||   haslo2 === '' || imie ==='' ||  nazwisko === '' || auto === '' ||    wojewodztwo === 'dolnośląskie'){
+        errors.push('Wypełnij Wszystkie Pola')
+      }
+      if(errors.length > 0){
+        setShow(true)
+        setErrors(errors)
+      }else{
+        handleSubmit(event)  
+      }
+  }
   return (
     <main>
       <section className="d-flex align-items-center my-5 mt-lg-6 mb-lg-5">
@@ -24,40 +87,84 @@ export default () => {
             <Col xs={12} className="d-flex align-items-center justify-content-center">
               <div className="mb-4 mb-lg-0 bg-white shadow-soft border rounded border-light p-4 p-lg-5 w-100 fmxw-500">
                 <div className="text-center text-md-center mb-4 mt-md-0">
-                  <h3 className="mb-0">Create an account</h3>
+                  <p className="mb-0">Create an account</p>
                 </div>
-                <Form className="mt-4">
+                {errors.map(error =>{
+                  return show && <Alert variant="danger" onClose={() => setShow(false)} dismissible>{error}</Alert>
+                })}
+                <Form className="mt-4" onSubmit={(e)=>{handleValidate(e)}} encType="multipart/form-data">
                   <Form.Group id="email" className="mb-4">
-                    <Form.Label>Your Email</Form.Label>
+                    <Form.Label>Email</Form.Label>
                     <InputGroup>
                       <InputGroup.Text>
                         <FontAwesomeIcon icon={faEnvelope} />
                       </InputGroup.Text>
-                      <Form.Control autoFocus required type="email" placeholder="example@company.com" />
+                      <Form.Control onChange={(e)=>{handleChange(e)}} autoFocus required type="email" name="email" value={formData.email} placeholder="Podaj Email" />
                     </InputGroup>
                   </Form.Group>
                   <Form.Group id="password" className="mb-4">
-                    <Form.Label>Your Password</Form.Label>
+                    <Form.Label>Hasło</Form.Label>
                     <InputGroup>
                       <InputGroup.Text>
                         <FontAwesomeIcon icon={faUnlockAlt} />
                       </InputGroup.Text>
-                      <Form.Control required type="password" placeholder="Password" />
+                      <Form.Control onChange={(e)=>{handleChange(e)}} required type="password" placeholder="Podaj Hasło" value={formData.haslo} name="haslo"/>
                     </InputGroup>
                   </Form.Group>
                   <Form.Group id="confirmPassword" className="mb-4">
-                    <Form.Label>Confirm Password</Form.Label>
+                    <Form.Label>Potwiedź Hasło</Form.Label>
                     <InputGroup>
                       <InputGroup.Text>
                         <FontAwesomeIcon icon={faUnlockAlt} />
                       </InputGroup.Text>
-                      <Form.Control required type="password" placeholder="Confirm Password" />
+                      <Form.Control onChange={(e)=>{handleChange(e)}}  required type="password" placeholder="Potwierdź Hasło" value={formData.haslo2} name="haslo2" />
                     </InputGroup>
                   </Form.Group>
+                  <Form.Group id="imie" className="mb-4">
+                    <Form.Label>Imię</Form.Label>
+                    <InputGroup>
+     
+                      <Form.Control onChange={(e)=>{handleChange(e)}}  required type="text" placeholder="Podaj Imię" value={formData.imie} name="imie"/>
+                    </InputGroup>
+                  </Form.Group>
+                  <Form.Group id="nazwisko" className="mb-4">
+                    <Form.Label>Nazwisko</Form.Label>
+                    <InputGroup>
+                      <Form.Control onChange={(e)=>{handleChange(e)}}  required type="text" placeholder="Podaj Nazwisko" value={formData.nazwisko} name="nazwisko" />
+                    </InputGroup>
+                  </Form.Group>
+                    <Form.Group id="auto">
+                <Form.Label>Auto</Form.Label>
+                <Form.Select onChange={(e)=>{handleChange(e)}}   name="auto" value={formData.auto}>
+                  <option value={false}>Własne</option>
+                  <option value={true}>Moje</option>
+                </Form.Select>
+              </Form.Group>
+              <Form.Group className="mb-2">
+                <Form.Label>Województwo</Form.Label>
+                <Form.Select onChange={(e)=>{handleChange(e)}}  id="state" name="wojewodztwo" value={formData.wojewodztwo} >
+                  <option value="dolnośląskie">Dolnośląskie</option>
+                  <option value="kujawsko-pomorskie">Kujawsko-pomorskie</option>
+                  <option value="lubelskie">Lubelskie</option>
+                  <option value="lubuskie">Lubuskie</option>
+                  <option value="łódzkie">Łódzkie</option>
+                  <option value="małopolskie">Małopolskie</option>
+                  <option value="mazowieckie">Mazowieckie</option>
+                  <option value="opolskie">Opolskie</option>
+                  <option value="podkarpackie">Podkarpackie</option>
+                  <option value="podlaskie">Podlaskie</option>
+                  <option value="pomorskie">Pomorskie</option>
+                  <option value="śląskie">Śląskie</option>
+                  <option value="świętokrzyskie">Świętokrzyskie</option>
+                  <option value="warmińsko-mazurskie">Warmińsko-mazurskie</option>
+                  <option value="wielkopolskie">Wielkopolskie</option>
+                  <option value="zachodniopomorskie">Zachodniopomorskie</option>
+                </Form.Select>
+              </Form.Group>
                   <FormCheck type="checkbox" className="d-flex mb-4">
                     <FormCheck.Input required id="terms" className="me-2" />
                     <FormCheck.Label htmlFor="terms">
-                      I agree to the <Card.Link>terms and conditions</Card.Link>
+                      Zgoda Na Przetwarzanie Danych Osobowych <Card.Link>Warunki</Card.Link>
                     </FormCheck.Label>
                   </FormCheck>
 

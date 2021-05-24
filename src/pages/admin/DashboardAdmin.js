@@ -1,5 +1,5 @@
 
-import React from "react";
+import React,{useState} from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCashRegister, faChartLine, faCloudUploadAlt, faPlus, faRocket, faTasks, faUserShield } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Button, Dropdown, ButtonGroup } from '@themesberg/react-bootstrap';
@@ -13,31 +13,46 @@ import { Form, InputGroup } from '@themesberg/react-bootstrap';
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { RozliczeniaNaMoimAucieForm, RozliczeniaNaSwoimAucieForm } from '../../components/Forms'
 export default () => {
-  const imie = "testowe Imie"
+  const [isKierowcyShow,setIsKierowcyShow] = useState(false)
+  const [isRozliczeniaShow,setIsRozliczeniaShow] = useState(false)
+  const [isRozliczShow,setIsRozliczShow] = useState(false)
+  const [isModyfikujShow,setIsModyfikujShow] = useState(false)
+  const [isFakturyShow,setIsFakturyShow] = useState(false)
+  const [isUmowyShow,setIsUmowyShow] = useState(false)
   return (
     <>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
         <Dropdown className="btn-toolbar">
         <Dropdown.Toggle as={Button} variant="primary" size="sm" className="me-2">
-            <FontAwesomeIcon icon={faPlus} className="me-2" />Dodaj
+            <FontAwesomeIcon icon={faPlus} className="me-2" />Akjca
           </Dropdown.Toggle>
           <Dropdown.Menu className="dashboard-dropdown dropdown-menu-left mt-2">
-            <Dropdown.Item className="fw-bold">
-              <FontAwesomeIcon icon={faTasks} className="me-2" />Dodaj Fakture
+            <Dropdown.Item className="fw-bold"  onClick={()=>{
+                setIsKierowcyShow(true)
+                setIsFakturyShow(false)
+                setIsRozliczeniaShow(false)
+              }}>
+            <FontAwesomeIcon icon={faPlus} className="me-2"/>Pokaz Kierowców
             </Dropdown.Item>
-            <Dropdown.Item className="fw-bold">
-              <FontAwesomeIcon icon={faCloudUploadAlt} className="me-2" />Dodaj Umowe
+            <Dropdown.Item className="fw-bold"  onClick={()=>{
+                 setIsRozliczeniaShow(true)
+                 setIsKierowcyShow(false)
+                 setIsFakturyShow(false)
+              }}>
+              <FontAwesomeIcon icon={faTasks} className="me-2"/>Pokaz Rozliczenia
+            </Dropdown.Item>
+            <Dropdown.Item className="fw-bold" onClick={()=>{
+                 setIsFakturyShow(true)
+                 setIsRozliczeniaShow(false)
+                 setIsKierowcyShow(false)
+            }}>
+              <FontAwesomeIcon icon={faCloudUploadAlt} className="me-2" />Pokaż Pokaż Faktury
             </Dropdown.Item>
 
             <Dropdown.Divider />
+
             <Dropdown.Item className="fw-bold">
               <FontAwesomeIcon icon={faUserShield} className="me-2" /> Pokaz Obrót
-            </Dropdown.Item>
-            <Dropdown.Item className="fw-bold">
-              <FontAwesomeIcon icon={faRocket} className="text-danger me-2" /> Pokaż Przychód
-            </Dropdown.Item>
-            <Dropdown.Item className="fw-bold">
-              <FontAwesomeIcon icon={faRocket} className="text-danger me-2" /> Pokaż Kierowców
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
@@ -97,18 +112,23 @@ export default () => {
 
       <Row>
         <Col xs={12}>
-                <h2 className="text-center my-4">Kierowcy</h2>
-                <Form className="mt-4">
-                  <Form.Group className="mb-2">
-                      <Form.Label>Wybierz Kierowcę</Form.Label>
-                      <Form.Select id="state" defaultValue="0">
-                        <option value="uber">Uber</option>
-                        <option value="bolt">Bolt</option>
-                        <option value="free-now">FreeNow</option>
-                      </Form.Select>
-                    </Form.Group>
-                  </Form>
-                <PageKierowcyTable kierowcy={kierowcy} />
+                {isKierowcyShow && 
+                <React.Fragment>
+                  <h2 className="text-center my-4">Kierowcy</h2>
+                  <Form className="mt-4">
+                    <Form.Group className="mb-2">
+                        <Form.Label>Wybierz Kierowcę</Form.Label>
+                        <Form.Select id="state" defaultValue="0">
+                          <option value="uber">Uber</option>
+                          <option value="bolt">Bolt</option>
+                          <option value="free-now">FreeNow</option>
+                        </Form.Select>
+                      </Form.Group>
+                    </Form>
+                  <PageKierowcyTable kierowcy={kierowcy} />
+               </React.Fragment>}
+               {isRozliczeniaShow && 
+               <React.Fragment>
                 <h2 className="text-center my-4">Rozliczenia</h2>
                 <Form className="mt-4">
                   <Form.Group className="mb-2">
@@ -135,9 +155,14 @@ export default () => {
                   </Form>
                   <PageRozliczeniaNaMoimAucieTable rozliczenia={rozliczenia}/>
                   <PageRozliczeniaNaSwoimAucieTable rozliczenia={rozliczenia}/>
-                  <h2 className="text-center my-5">Faktury</h2>
-                  <PageFakturyTable />
- 
+                  </React.Fragment>}
+                  {isFakturyShow && 
+                  <React.Fragment>
+                    <h2 className="text-center my-5">Faktury</h2>
+                    <PageFakturyTable />
+                  </React.Fragment>}
+                {isRozliczShow && 
+                <React.Fragment>
                 <Form className="mt-4">
                   <h2 className="text-center">Rozlicz Kierowcę</h2>
                   <Form.Group className="mb-3">
@@ -180,14 +205,17 @@ export default () => {
                       <Button variant="primary" type="submit">Prześlij</Button>
                     </div>
                 </Form>
-            
+                </React.Fragment>}
         </Col>
       </Row>
 
       <Row>
         <Col>
-          <RozliczeniaNaMoimAucieForm />
-          <RozliczeniaNaSwoimAucieForm />
+        {isModyfikujShow && 
+          <React.Fragment>
+            <RozliczeniaNaMoimAucieForm />
+            <RozliczeniaNaSwoimAucieForm />
+          </React.Fragment>}
         </Col>
       </Row>
 
