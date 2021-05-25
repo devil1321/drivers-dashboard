@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState,useContext,useEffect } from "react";
 import { Link } from 'react-router-dom'
 import { Routes } from "../routes";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,10 +10,17 @@ import { Row, Col, Nav, Form, Image, Navbar, Dropdown, Container, ListGroup, Inp
 import NOTIFICATIONS_DATA from "../data/notifications";
 import Profile3 from "../assets/img/team/profile-picture-3.jpg";
 
+import axios from 'axios'
+import {DataContext} from '../context/data'
+
 
 export default (props) => {
   const [notifications, setNotifications] = useState(NOTIFICATIONS_DATA);
   const areNotificationsRead = notifications.reduce((acc, notif) => acc && notif.read, true);
+  const {user, setUser } = useContext(DataContext)
+  const {imie,nazwisko} = user
+  useEffect(()=>{
+  },[user])
 
   const markNotificationsAsRead = () => {
     setTimeout(() => {
@@ -21,10 +28,16 @@ export default (props) => {
     }, 300);
   };
 
+  const handleLogout = () =>{
+    axios.get('http://localhost:5000/users/logout')
+      .then(res => console.log(res))
+      .catch(err => {if(err) throw err})
+  }
 
   const Notification = (props) => {
     const { link, sender, image, time, message, read = false } = props;
     const readClassName = read ? "" : "text-danger";
+    
 
     return (
       <ListGroup.Item action href={link} className="border-bottom border-light">
@@ -88,9 +101,9 @@ export default (props) => {
             <Dropdown as={Nav.Item}>
               <Dropdown.Toggle as={Nav.Link} className="pt-1 px-0">
                 <div className="media d-flex align-items-center">
-                  <Image src={Profile3} className="user-avatar md-avatar rounded-circle" />
+                  <Image src='/profile.png' className="user-avatar md-avatar rounded-circle" />
                   <div className="media-body ms-2 text-dark align-items-center d-none d-lg-block">
-                    <span className="mb-0 font-small fw-bold">Bonnie Green</span>
+                  <span className="mb-0 font-small fw-bold">{imie} {nazwisko}</span>
                   </div>
                 </div>
               </Dropdown.Toggle>
@@ -108,7 +121,7 @@ export default (props) => {
                 </Dropdown.Item>
                 <Dropdown.Divider />
 
-                <Dropdown.Item className="fw-bold">
+                <Dropdown.Item className="fw-bold" onClick={()=>{handleLogout()}}>
                   <FontAwesomeIcon icon={faSignOutAlt} className="text-danger me-2" /> Logout
                 </Dropdown.Item>
               </Dropdown.Menu>

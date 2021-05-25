@@ -1,5 +1,5 @@
 
-import React,{useState} from "react";
+import React,{useState,useEffect,useContext} from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCashRegister, faChartLine, faCloudUploadAlt, faPlus, faRocket, faTasks, faUserShield } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Button, Dropdown, ButtonGroup } from '@themesberg/react-bootstrap';
@@ -12,11 +12,21 @@ import { rozliczenia } from '../../data/rozliczenia'
 import { umowy } from '../../data/umowy'
 import { Form, InputGroup } from '@themesberg/react-bootstrap';
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import {DataContext} from '../../context/data'
+
+
+import axios from 'axios'
 
 export default () => {
   const [isDodajFaktureShow,setIsDodajFaktureShow] = useState(false)
   const [isDodajUmoweShow,setIsDodajUmoweShow] = useState(false)
-  return (
+  const {user, setUser } = useContext(DataContext)
+
+  useEffect(()=>{
+    console.log(user)
+  },[user])
+  
+    return (
     <>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
         <Dropdown className="btn-toolbar">

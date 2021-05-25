@@ -17,8 +17,8 @@ export default () => {
   const [errors,setErrors] = useState([])
   const [formData,setFormData] = useState({
       email:'',
-      haslo:'',
-      haslo2:'',
+      password:'',
+      password2:'',
       imie:'',
       nazwisko:'',
       auto:'',
@@ -41,30 +41,30 @@ export default () => {
     axios.post('http://localhost:5000/users/register',formData)
       .then(res => setFormData({  
         email:'',
-        haslo:'',
-        haslo2:'',
+        password:'',
+        password:'',
         imie:'',
         nazwisko:'',
         auto:'',
         wojewodztwo:'dolnośląskie',
-        isActive:false
+        isActive:false,
+        isAdmin:false
       }))
       .catch(err => {if(err) throw err})
-      history.push('/sign-in')
   }
 
   const handleValidate = (e) =>{
       e.preventDefault()
       let event = e
       let errors = []
-      const {  email, haslo, haslo2, imie, nazwisko, auto,wojewodztwo } = formData    
-      if(haslo !== haslo2){
+      const {  email, password, password2, imie, nazwisko, auto,wojewodztwo } = formData    
+      if(password !== password2){
         errors.push('Hasla się rożnia')
       }
-      if(haslo.length < 6){
+      if(password.length < 6){
         errors.push('Hasło Musi Posiadać co najmniej 6 znaków')
       }
-      if( email === '' || haslo === '' ||   haslo2 === '' || imie ==='' ||  nazwisko === '' || auto === '' ||    wojewodztwo === 'dolnośląskie'){
+      if( email === '' || password === '' ||   password2 === '' || imie ==='' ||  nazwisko === '' || auto === '' ||    wojewodztwo === 'dolnośląskie'){
         errors.push('Wypełnij Wszystkie Pola')
       }
       if(errors.length > 0){
@@ -108,7 +108,7 @@ export default () => {
                       <InputGroup.Text>
                         <FontAwesomeIcon icon={faUnlockAlt} />
                       </InputGroup.Text>
-                      <Form.Control onChange={(e)=>{handleChange(e)}} required type="password" placeholder="Podaj Hasło" value={formData.haslo} name="haslo"/>
+                      <Form.Control onChange={(e)=>{handleChange(e)}} required type="password" placeholder="Podaj Hasło" value={formData.haslo} name="password"/>
                     </InputGroup>
                   </Form.Group>
                   <Form.Group id="confirmPassword" className="mb-4">
@@ -117,7 +117,7 @@ export default () => {
                       <InputGroup.Text>
                         <FontAwesomeIcon icon={faUnlockAlt} />
                       </InputGroup.Text>
-                      <Form.Control onChange={(e)=>{handleChange(e)}}  required type="password" placeholder="Potwierdź Hasło" value={formData.haslo2} name="haslo2" />
+                      <Form.Control onChange={(e)=>{handleChange(e)}}  required type="password" placeholder="Potwierdź Hasło" value={formData.haslo2} name="password2" />
                     </InputGroup>
                   </Form.Group>
                   <Form.Group id="imie" className="mb-4">
@@ -136,6 +136,7 @@ export default () => {
                     <Form.Group id="auto">
                 <Form.Label>Auto</Form.Label>
                 <Form.Select onChange={(e)=>{handleChange(e)}}   name="auto" value={formData.auto}>
+                  <option>Wybierz Auto</option>
                   <option value={false}>Własne</option>
                   <option value={true}>Moje</option>
                 </Form.Select>

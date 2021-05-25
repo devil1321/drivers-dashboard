@@ -1,61 +1,97 @@
 
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import moment from "moment-timezone";
 import Datetime from "react-datetime";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Card, Form, Button, InputGroup } from '@themesberg/react-bootstrap';
-
+import {DataContext} from '../context/data'
+import axios from 'axios'
 
 export const GeneralInfoForm = () => {
   const [birthday, setBirthday] = useState("");
+  const {user, setUser } = useContext(DataContext)
+  
+  const {_id, login,email,imie,nazwisko,dataUrodzin,plec,pesel,telefon,nrDowodu,auto,wojewodztwo,adres,nrDomu,miasto,zip} = user
+  
 
+  const handleChange = (e) =>{
+    setUser(prevState=>({
+      ...prevState,
+      [e.target.name]:e.target.value
+    }))
+  }
+  const handleSubmit = (e) =>{
+    e.preventDefault()
+    axios.post('http://localhost:5000/users/update/' + _id ,user)
+      .then(res => {
+        console.log('added')
+        localStorage.clear()
+        localStorage.setItem('User',JSON.stringify(res.data))
+        setUser(res.data)
+        window.location.reload()
+      })
+      .catch(err => {if(err) throw err})
+  }
+  useEffect(()=>{
+    console.log(user)
+  },[user])
   return (
     <Card border="light" className="bg-white shadow-sm mb-4">
       <Card.Body>
         <h5 className="mb-4">Informacje Ogólne</h5>
-        <Form>
-          <Row>
+        <Form onSubmit={(e)=>{handleSubmit(e)}}>
+        <Row>
             <Col md={6} className="mb-3">
-              <Form.Group id="firstName">
-                <Form.Label>Imię</Form.Label>
-                <Form.Control required type="text" placeholder="Podaj Imię" />
+              <Form.Group id="login">
+                <Form.Label>Login</Form.Label>
+                <Form.Control onChange={(e)=>{handleChange(e)}}  type="text" placeholder="Podaj Login" name="login" value={login}/>
               </Form.Group>
             </Col>
             <Col md={6} className="mb-3">
-              <Form.Group id="lastName">
+              <Form.Group id="email">
+                <Form.Label>Email</Form.Label>
+                <Form.Control onChange={(e)=>{handleChange(e)}}  type="text" placeholder="Podaj Email" name="email" value={email} />
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6} className="mb-3">
+              <Form.Group id="imie">
+                <Form.Label>Imię</Form.Label>
+                <Form.Control onChange={(e)=>{handleChange(e)}}  type="text" placeholder="Podaj Imię" name="imie" value={imie} />
+              </Form.Group>
+            </Col>
+            <Col md={6} className="mb-3">
+              <Form.Group id="nazwisko">
                 <Form.Label>Nazwisko</Form.Label>
-                <Form.Control required type="text" placeholder="Podaj Nazwisko" />
+                <Form.Control onChange={(e)=>{handleChange(e)}}  type="text" placeholder="Podaj Nazwisko" name="nazwisko" value={nazwisko} />
               </Form.Group>
             </Col>
           </Row>
           <Row className="align-items-center">
             <Col md={6} className="mb-3">
-              <Form.Group id="birthday">
+              <Form.Group id="dataUrodzin">
                 <Form.Label>Data Urodzin</Form.Label>
-                <Datetime
-                  timeFormat={false}
-                  onChange={setBirthday}
-                  renderInput={(props, openCalendar) => (
+               
                     <InputGroup>
                       <InputGroup.Text><FontAwesomeIcon icon={faCalendarAlt} /></InputGroup.Text>
                       <Form.Control
-                        required
-                        type="text"
-                        value={birthday ? moment(birthday).format("MM/DD/YYYY") : ""}
+                        name="dataUrodzin"
+                        type="date"
+                        value={dataUrodzin}
                         placeholder="mm/dd/yyyy"
-                        onFocus={openCalendar}
-                        onChange={() => { }} />
+                        onChange={(e)=>{handleChange(e)}} />
                     </InputGroup>
-                  )} />
+               
               </Form.Group>
             </Col>
             <Col md={6} className="mb-3">
-              <Form.Group id="gender">
+              <Form.Group id="plec">
                 <Form.Label>Płeć</Form.Label>
-                <Form.Select defaultValue="0">
-                  <option value="0">Mężczyzna</option>
-                  <option value="1">Kobieta</option>
+                <Form.Select onChange={(e)=>{handleChange(e)}} defaultValue={plec} value={plec} name="plec">
+                  <option value="mezczyzna">Mężczyzna</option>
+                  <option value="kobieta">Kobieta</option>
                 </Form.Select>
               </Form.Group>
             </Col>
@@ -64,27 +100,30 @@ export const GeneralInfoForm = () => {
             <Col md={6} className="mb-3">
               <Form.Group id="pesel">
                 <Form.Label>Pesel</Form.Label>
-                <Form.Control required type="text" placeholder="Podaj Pesel" />
+                <Form.Control onChange={(e)=>{handleChange(e)}}  type="number" placeholder="Podaj Pesel" name="pesel" value={pesel} />
               </Form.Group>
             </Col>
             <Col md={6} className="mb-3">
               <Form.Group id="telefon">
-                <Form.Label>Telefon</Form.Label>
-                <Form.Control required type="text" placeholder="+48 000 000 000" />
+                <Form.Label>Nr Dowodu</Form.Label>
+                <Form.Control onChange={(e)=>{handleChange(e)}}  type="text" placeholder="Podaj Nr Dowodu" name="nrDowodu" value={nrDowodu} />
               </Form.Group>
             </Col>
           </Row>
           <Row>
             <Col md={6} className="mb-3">
-              <Form.Group id="emal">
-                <Form.Label>Email</Form.Label>
-                <Form.Control required type="email" placeholder="name@company.com" />
+              <Form.Group id="telefon">
+                <Form.Label>Telefon</Form.Label>
+                <Form.Control onChange={(e)=>{handleChange(e)}}  type="number" placeholder="+12-345 678 910" name="telefon" value={telefon} />
               </Form.Group>
             </Col>
             <Col md={6} className="mb-3">
-              <Form.Group id="phone">
-                <Form.Label>Telefon</Form.Label>
-                <Form.Control required type="number" placeholder="+12-345 678 910" />
+            <Form.Group id="auto">
+                <Form.Label>Auto</Form.Label>
+                <Form.Select onChange={(e)=>{handleChange(e)}} defaultValue={auto} value={auto} name="auto">
+                  <option value={false}>Na Swoim</option>
+                  <option value={true}>Na Moim</option>
+                </Form.Select>
               </Form.Group>
             </Col>
           </Row>
@@ -92,15 +131,15 @@ export const GeneralInfoForm = () => {
           <h5 className="my-4">Adres</h5>
           <Row>
             <Col sm={9} className="mb-3">
-              <Form.Group id="addres">
+              <Form.Group id="adres">
                 <Form.Label>Adres</Form.Label>
-                <Form.Control required type="text" placeholder="Podaj Adres" />
+                <Form.Control onChange={(e)=>{handleChange(e)}}  type="text" placeholder="Podaj Adres" name="adres" value={adres} />
               </Form.Group>
             </Col>
             <Col sm={3} className="mb-3">
-              <Form.Group id="nrdomu">
+              <Form.Group id="nr-domu">
                 <Form.Label>Nr Domu</Form.Label>
-                <Form.Control required type="number" placeholder="No." />
+                <Form.Control onChange={(e)=>{handleChange(e)}}  type="number" placeholder="No." name="nrDomu" value={nrDomu}/>
               </Form.Group>
             </Col>
           </Row>
@@ -108,13 +147,13 @@ export const GeneralInfoForm = () => {
             <Col sm={4} className="mb-3">
               <Form.Group id="miasto">
                 <Form.Label>Miasto</Form.Label>
-                <Form.Control required type="text" placeholder="Miasto" />
+                <Form.Control onChange={(e)=>{handleChange(e)}}  type="text" placeholder="Miasto" name="masto" value={miasto} />
               </Form.Group>
             </Col>
             <Col sm={4} className="mb-3">
               <Form.Group className="mb-2">
                 <Form.Label>Województwo</Form.Label>
-                <Form.Select id="state" defaultValue="0">
+                <Form.Select onChange={(e)=>{handleChange(e)}} id="wojewodztwo" defaultValue={wojewodztwo} name="wojewodztwo">
                   <option value="dolnośląskie">Dolnośląskie</option>
                   <option value="kujawsko-pomorskie">Kujawsko-pomorskie</option>
                   <option value="lubelskie">Lubelskie</option>
@@ -137,7 +176,7 @@ export const GeneralInfoForm = () => {
             <Col sm={4}>
               <Form.Group id="zip">
                 <Form.Label>ZIP</Form.Label>
-                <Form.Control required type="tel" placeholder="ZIP Miejscowość" />
+                <Form.Control onChange={(e)=>{handleChange(e)}}  type="tel" placeholder="ZIP Miejscowość" name="zip" value={zip} />
               </Form.Group>
             </Col>
           </Row>

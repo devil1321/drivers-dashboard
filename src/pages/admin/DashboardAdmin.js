@@ -1,5 +1,5 @@
 
-import React,{useState} from "react";
+import React,{useState,useContext} from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCashRegister, faChartLine, faCloudUploadAlt, faPlus, faRocket, faTasks, faUserShield } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Button, Dropdown, ButtonGroup } from '@themesberg/react-bootstrap';
@@ -12,6 +12,11 @@ import { kierowcy } from '../../data/kierowcy'
 import { Form, InputGroup } from '@themesberg/react-bootstrap';
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { RozliczeniaNaMoimAucieForm, RozliczeniaNaSwoimAucieForm } from '../../components/Forms'
+
+import { DataContext } from '../../context/data'
+
+import axios from 'axios'
+
 export default () => {
   const [isKierowcyShow,setIsKierowcyShow] = useState(false)
   const [isRozliczeniaShow,setIsRozliczeniaShow] = useState(false)
@@ -19,6 +24,34 @@ export default () => {
   const [isModyfikujShow,setIsModyfikujShow] = useState(false)
   const [isFakturyShow,setIsFakturyShow] = useState(false)
   const [isUmowyShow,setIsUmowyShow] = useState(false)
+
+
+  const {users, setUsers } = useContext(DataContext)
+
+  const handleActive = (id,isActive) =>{
+    if(isActive){
+      isActive = false
+    }else{
+      isActive = true
+    }
+    const user = {
+      isActive
+    }
+    axios.post('http://localhost:5000/users/state/' + id ,user)
+      .then(res => {
+        setUsers([])
+        window.location.reload()
+      })
+      .catch(err => {if(err) throw err})
+  }
+  const handleDelete = (id) =>{
+    axios.delete('http://localhost:5000/users/delete/' + id)
+    .then(res => {
+      setUsers([])
+      window.location.reload()
+    })
+  }
+
   return (
     <>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
@@ -119,13 +152,13 @@ export default () => {
                     <Form.Group className="mb-2">
                         <Form.Label>Wybierz Kierowcę</Form.Label>
                         <Form.Select id="state" defaultValue="0">
-                          <option value="uber">Uber</option>
-                          <option value="bolt">Bolt</option>
-                          <option value="free-now">FreeNow</option>
+                          {users.map(user =>{
+                            return <option>{user.imie}{user.nazwisko}</option>
+                          })}
                         </Form.Select>
                       </Form.Group>
                     </Form>
-                  <PageKierowcyTable kierowcy={kierowcy} />
+                  <PageKierowcyTable kierowcy={users} handleActive={handleActive} handleDelete={handleDelete} />
                </React.Fragment>}
                {isRozliczeniaShow && 
                <React.Fragment>
@@ -134,9 +167,9 @@ export default () => {
                   <Form.Group className="mb-2">
                       <Form.Label>Wybierz Kierowcę</Form.Label>
                       <Form.Select id="state" defaultValue="0">
-                        <option value="uber">Uber</option>
-                        <option value="bolt">Bolt</option>
-                        <option value="free-now">FreeNow</option>
+                      {users.map(user =>{
+                            return <option>{user.imie}{user.nazwisko}</option>
+                          })}
                       </Form.Select>
                     </Form.Group>
                     <Form.Group className="mb-3">

@@ -1,16 +1,50 @@
 
-import React from "react";
+import React ,{ useState, useEffect,useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft, faEnvelope, faUnlockAlt } from "@fortawesome/free-solid-svg-icons";
 import { faFacebookF, faGithub, faTwitter } from "@fortawesome/free-brands-svg-icons";
 import { Col, Row, Form, Card, Button, FormCheck, Container, InputGroup } from '@themesberg/react-bootstrap';
 import { Link } from 'react-router-dom';
-
+import  axios  from 'axios'
 import { Routes } from "../../routes";
 import BgImage from "../../assets/img/illustrations/signin.svg";
-
+import {useHistory} from 'react-router-dom'
+import {DataContext} from '../../context/data'
 
 export default () => {
+  const history = useHistory()
+  
+  const {user, setUser } = useContext(DataContext)
+
+  const [formData,setFormData] = useState({
+    email:'',
+    password:''
+  })
+
+  const handleChange = (e) =>{
+    setFormData(prevState=>({
+      ...prevState,
+      [e.target.name]:e.target.value
+    }))
+  }
+
+  const handleLogin = async (e) =>{
+    e.preventDefault()
+    axios.post('http://localhost:5000/users/login',formData)
+      .then(res => {
+        localStorage.setItem('User',JSON.stringify(res.data))
+        if(res.data.isAdmin){
+          history.push('/dashboard/admin')
+        }else{
+          history.push('/dashboard/overview')
+        }
+      })
+      .catch(err => {if(err) throw err})
+  }
+
+  useEffect(()=>{
+  },[user])
+
   return (
     <main>
       <section className="d-flex align-items-center my-5 mt-lg-6 mb-lg-5">
@@ -26,14 +60,14 @@ export default () => {
                 <div className="text-center text-md-center mb-4 mt-md-0">
                   <h3 className="mb-0">Sign in to our platform</h3>
                 </div>
-                <Form className="mt-4">
+                <Form className="mt-4" onSubmit={(e)=>{handleLogin(e)}}>
                   <Form.Group id="email" className="mb-4">
                     <Form.Label>Your Email</Form.Label>
                     <InputGroup>
                       <InputGroup.Text>
                         <FontAwesomeIcon icon={faEnvelope} />
                       </InputGroup.Text>
-                      <Form.Control autoFocus required type="email" placeholder="example@company.com" />
+                      <Form.Control autoFocus  onChange={(e)=>{handleChange(e)}} required name="email" type="email" placeholder="example@company.com" />
                     </InputGroup>
                   </Form.Group>
                   <Form.Group>
@@ -43,7 +77,7 @@ export default () => {
                         <InputGroup.Text>
                           <FontAwesomeIcon icon={faUnlockAlt} />
                         </InputGroup.Text>
-                        <Form.Control required type="password" placeholder="Password" />
+                        <Form.Control required onChange={(e)=>{handleChange(e)}}  type="password" name="password" placeholder="Password" />
                       </InputGroup>
                     </Form.Group>
                     <div className="d-flex justify-content-between align-items-center mb-4">

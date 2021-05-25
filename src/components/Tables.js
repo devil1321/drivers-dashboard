@@ -123,13 +123,13 @@ export const PageFakturyTable = (props) => {
 };
 
 export const PageKierowcyTable = (props) =>{
-  const {kierowcy} = props
+  const {kierowcy,handleDelete,handleActive} = props
   const TableRow = (props) => {
-  const { id, imie, nazwisko, email, umowa, auto, doWyplaty, isActive } = props;
+  const { _id,index, imie, nazwisko, email, umowa, auto, doWyplaty, isActive,handleDelte,handleActive} = props;
 return (
   <tr>
     <td>
-      <Card.Link href="#" className="text-primary fw-bold">{id}</Card.Link>
+      <Card.Link href="#" className="text-primary fw-bold">{index}</Card.Link>
     </td>
     <td className="fw-bold">
       <FontAwesomeIcon icon className={`icon icon-xs text-black w-30`} />
@@ -140,8 +140,8 @@ return (
     <td>{auto}</td>
     <td>{doWyplaty}</td>
     <td>{isActive ? "Aktywne" : "Nieaktywne"}</td>
-    <td>Usuń</td>
-    <td>{isActive ? "dezaktywuj" : "aktywuj"}</td>
+    <td onClick={(e)=>{handleDelete(_id)}}><span>Usuń</span></td>
+    <td onClick={(e)=>{handleActive(_id,isActive)}}><span>{isActive ? "dezaktywuj" : "aktywuj"}</span></td>
   </tr>
   );
   }
@@ -161,7 +161,7 @@ return (
         <Table responsive className="table-centered table-nowrap rounded table-hover mb-0">
           <thead className="thead-light">
             <tr>
-              <th className="border-0">Id</th>
+              <th className="border-0">Nr</th>
               <th className="border-0">Imie I Nazwisko</th>
               <th className="border-0">Email</th>
               <th className="border-0">Umowa</th>
@@ -173,7 +173,7 @@ return (
             </tr>
           </thead>
           <tbody>
-            {kierowcy.map(kierowca => <TableRow key={kierowca.id} {...kierowca} />)}
+            {kierowcy.map((kierowca,index) => <TableRow key={kierowca._id} {...kierowca} handleDelete={handleDelete} handleActive={handleActive} index={index+1} />)}
           </tbody>
         </Table>
       </Card.Body>

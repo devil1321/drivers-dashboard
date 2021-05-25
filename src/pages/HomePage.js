@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Route, Switch, Redirect } from "react-router-dom";
 import { Routes } from "../routes";
-
+import { DataProvider } from '../context/data'
 // pages
 
 import DashboardAdmin from "./admin/DashboardAdmin";
@@ -60,18 +60,20 @@ const RouteWithSidebar = ({ component: Component, ...rest }) => {
   }
 
   return (
-    <Route {...rest} render={props => (
-      <>
-        <Preloader show={loaded ? false : true} />
-        <Sidebar />
-
-        <main className="content">
-          <Navbar />
-          <Component {...props} />
-        </main>
-      </>
-    )}
-    />
+    <DataProvider>
+      <Route {...rest} render={props => (
+        <>
+          <Preloader show={loaded ? false : true} />
+          <Sidebar />
+      
+          <main className="content">
+            <Navbar />
+            <Component {...props} />
+          </main>
+        </>
+      )}
+      />
+    </DataProvider>
   );
 };
 
