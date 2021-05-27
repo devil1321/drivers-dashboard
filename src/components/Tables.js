@@ -25,10 +25,17 @@ const ValueChange = ({ value, suffix }) => {
 };
 
 export const PageUmowyTable = (props) =>{
-  const { umowy  } = props
+  const { umowy, user } = props
+  const loggedUserId = user._id
+  const isAdmin = user.isAdmin
+  if(umowy.length > 0){
+    var documents = umowy.filter(faktura => faktura.metadata.userId === loggedUserId)
+  }else{
+    var documents = umowy
+  }
   const TableRow = (props) => {
     const { index } = props
-    const { _id,filename} = props.umowa
+    const { filename } = props.umowa
     const { imie,nazwisko, rodzaj, data } = props.umowa.metadata;
   
     const handleDelete = (filename) =>{
@@ -76,7 +83,7 @@ export const PageUmowyTable = (props) =>{
           </tr>
         </thead>
         <tbody>
-          {umowy.map((umowa,index) => <TableRow key={umowa._id} umowa={umowa} index={index+1} />)}
+          {documents.map((umowa,index) => <TableRow key={umowa._id} umowa={umowa} index={index+1} />)}
         </tbody>
       </Table>
     </Card>
@@ -84,27 +91,23 @@ export const PageUmowyTable = (props) =>{
 };
 
 export const PageFakturyTable = (props) => {
-  const {faktury,docs} = props
-  console.log(props)
-  const TableRow = (props) => {
-    const  index  = props.index 
-    const { _id, userId , data, kwota, nip, płatność } = props.faktury;
+  const { faktury, user } = props
+  const loggedUserId = user._id
+  const isAdmin = user.isAdmin
+  if(faktury.length > 0){
+    var documents = faktury.filter(faktura => faktura.metadata.userId === loggedUserId)
+  }else{
+    var documents = faktury
+  } 
+  const TableRow = (props) =>  {
+      const index  = props.index 
+      const { filename } = props.faktura
+      const { _id,kwota,imie,nazwisko,formaPlatnosci,data,nip } = props.faktura.metadata
+      console.log(props.faktura)
 
-      if(docs.length > 0){
-        var documents = props.docs.filter(doc => doc.metadata.userId === userId)
-        if(documents.length > 0){
-          var { filename } = documents[index-1]
-        } else{
-          console.log('cant find document')
-        }
-      }
-
-    const handleDelete = (_id,filename) =>{
-      axios.delete('http://localhost:5000/faktury/delete/' + _id)
-        .then(res=>console.log('data deleted'))
-        .catch(err => console.log(err))
-      axios.delete('http://localhost:5000/faktury/docs/delete/' + filename)
-        .then(res=> window.location.reload())
+    const handleDelete = (filename) =>{
+      axios.delete('http://localhost:5000/faktury/faktura/delete/' + filename)
+        .then(res=>window.location.reload())
         .catch(err => console.log(err))
     }
 
@@ -119,9 +122,9 @@ export const PageFakturyTable = (props) => {
         </td>
         <td>{kwota}</td>
         <td>{nip}</td>
-        <td>{płatność}</td>
-        <td><a href={`http://localhost:5000/faktury/docs/${filename}`}><Button>Zobacz Fakturę</Button></a></td>
-        <td><Button onClick={()=>handleDelete(_id,filename)}>Usun Fakturę</Button></td>
+        <td>{formaPlatnosci}</td>
+        <td><a href={`http://localhost:5000/faktury/faktura/${filename}`}><Button>Zobacz Fakturę</Button></a></td>
+        <td><Button onClick={()=>handleDelete(filename)}>Usun Fakturę</Button></td>
       </tr>
     );
   };
@@ -152,7 +155,7 @@ export const PageFakturyTable = (props) => {
             </tr>
           </thead>
           <tbody>
-            {faktury.map((faktura,index) => <TableRow key={faktura._id} faktury={faktura} docs={docs} index={index+1}/>)}
+            {documents.map((faktura,index) => <TableRow key={faktura._id} faktura={faktura} user={user} index={index+1}/>)}
           </tbody>
         </Table>
       </Card.Body>

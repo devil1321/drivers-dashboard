@@ -20,11 +20,11 @@ export default () => {
 
   const [isDodajFaktureShow,setIsDodajFaktureShow] = useState(false)
   const [isDodajUmoweShow,setIsDodajUmoweShow] = useState(false)
-  const {user, setUser,umowy,faktury,fakturyDocs } = useContext(DataContext)
+  const {user, setUser,umowy,faktury } = useContext(DataContext)
 
   useEffect(()=>{
     console.log('user',user)
-  },[user,faktury,fakturyDocs])
+  },[user,faktury])
 
 
   const handleSubmitFaktura = (e) =>{
@@ -176,7 +176,7 @@ export default () => {
                       </Col>
                     </Form.Group>
                   </Form>
-                <PageFakturyTable faktury={faktury} docs={fakturyDocs}/>
+                <PageFakturyTable faktury={faktury} user={user}/>
                 {isDodajFaktureShow && 
                 <Form id="formFaktura" className="mt-4" onSubmit={(e)=>{handleSubmitFaktura(e)}} enctype="multipart/form-data" encType="multipart/form-data">
                   <h2 className="text-center">Dodaj Fakture</h2>
@@ -244,7 +244,7 @@ export default () => {
               </Tab.Pane>
 
               <Tab.Pane eventKey="umowy" className="py-4">
-                <PageUmowyTable umowy={umowy}/>
+                <PageUmowyTable umowy={umowy} user={user}/>
                 {isDodajUmoweShow && 
                 <Form id="formUmowa" onSubmit={(e)=>{handleSubmitUmowa(e)}} className="mt-4">
                 <h2 className="text-center">Dodaj Umowe</h2>

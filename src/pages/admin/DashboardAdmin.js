@@ -28,7 +28,7 @@ export default () => {
   const [isUmowyShow,setIsUmowyShow] = useState(false)
 
 
-  const {user,users, setUsers,faktury,fakturyDocs } = useContext(DataContext)
+  const {user,users, setUsers,faktury } = useContext(DataContext)
 
   const handleActive = (id,isActive) =>{
     if(isActive){
@@ -55,7 +55,7 @@ export default () => {
   }
   useEffect(()=>{
     
-  },[user,faktury,fakturyDocs])
+  },[user,faktury])
 
   return (
     <>
@@ -231,7 +231,7 @@ export default () => {
                   {isFakturyShow && 
                   <React.Fragment>
                     <h2 className="text-center my-5">Faktury</h2>
-                    <PageFakturyTable faktury={faktury} docs={fakturyDocs} />
+                    <PageFakturyTable faktury={faktury} user={user} />
                   </React.Fragment>}
                 {isRozliczShow && 
                 <React.Fragment>
