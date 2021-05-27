@@ -1,5 +1,5 @@
 
-import React,{useState,useContext} from "react";
+import React,{useState,useContext,useEffect} from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCashRegister, faChartLine, faCloudUploadAlt, faPlus, faRocket, faTasks, faUserShield } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Button, Dropdown, ButtonGroup } from '@themesberg/react-bootstrap';
@@ -19,6 +19,8 @@ import axios from 'axios'
 
 export default () => {
   const [isKierowcyShow,setIsKierowcyShow] = useState(false)
+  const [isPojazdyShow,setIsPojazdyShow] = useState(false)
+  const [isKierowcyPojazdyShow,setIsKierowcyPojazdyShow] = useState(false)
   const [isRozliczeniaShow,setIsRozliczeniaShow] = useState(false)
   const [isRozliczShow,setIsRozliczShow] = useState(false)
   const [isModyfikujShow,setIsModyfikujShow] = useState(false)
@@ -26,7 +28,7 @@ export default () => {
   const [isUmowyShow,setIsUmowyShow] = useState(false)
 
 
-  const {users, setUsers } = useContext(DataContext)
+  const {user,users, setUsers,faktury,fakturyDocs } = useContext(DataContext)
 
   const handleActive = (id,isActive) =>{
     if(isActive){
@@ -51,6 +53,9 @@ export default () => {
       window.location.reload()
     })
   }
+  useEffect(()=>{
+    
+  },[user,faktury,fakturyDocs])
 
   return (
     <>
@@ -60,26 +65,60 @@ export default () => {
             <FontAwesomeIcon icon={faPlus} className="me-2" />Akjca
           </Dropdown.Toggle>
           <Dropdown.Menu className="dashboard-dropdown dropdown-menu-left mt-2">
+
             <Dropdown.Item className="fw-bold"  onClick={()=>{
                 setIsKierowcyShow(true)
+                setIsPojazdyShow(false)
+                setIsKierowcyPojazdyShow(false)
                 setIsFakturyShow(false)
                 setIsRozliczeniaShow(false)
+                setIsUmowyShow(false)
               }}>
             <FontAwesomeIcon icon={faPlus} className="me-2"/>Pokaz Kierowców
             </Dropdown.Item>
+           
+            <Dropdown.Item className="fw-bold" onClick={()=>{
+                setIsPojazdyShow(true)
+                setIsKierowcyShow(false)
+                setIsKierowcyPojazdyShow(false)
+                setIsFakturyShow(false)
+                setIsRozliczeniaShow(false)
+                setIsUmowyShow(false)
+            }}>
+              <FontAwesomeIcon icon={faCloudUploadAlt} className="me-2" />Pokaż Pojazdy
+            </Dropdown.Item>
+      
+            <Dropdown.Item className="fw-bold" onClick={()=>{
+                setIsKierowcyPojazdyShow(true)
+                setIsKierowcyShow(false)
+                setIsPojazdyShow(false)
+                setIsFakturyShow(false)
+                setIsRozliczeniaShow(false)
+                setIsUmowyShow(false)
+            }}>
+              <FontAwesomeIcon icon={faCloudUploadAlt} className="me-2" />Pokaż Pojazdy I Kierowców
+            </Dropdown.Item>
+
+            <Dropdown.Item className="fw-bold" onClick={()=>{
+                setIsFakturyShow(true)
+                setIsKierowcyPojazdyShow(false)
+                setIsKierowcyShow(false)
+                setIsPojazdyShow(false)
+                setIsRozliczeniaShow(false)
+                setIsUmowyShow(false)
+            }}>
+              <FontAwesomeIcon icon={faCloudUploadAlt} className="me-2" />Pokaż Faktury
+            </Dropdown.Item>
+
             <Dropdown.Item className="fw-bold"  onClick={()=>{
-                 setIsRozliczeniaShow(true)
-                 setIsKierowcyShow(false)
-                 setIsFakturyShow(false)
+                setIsRozliczeniaShow(true)
+                setIsKierowcyPojazdyShow(false)
+                setIsKierowcyShow(false)
+                setIsPojazdyShow(false)
+                setIsFakturyShow(false)
+                setIsUmowyShow(false)
               }}>
               <FontAwesomeIcon icon={faTasks} className="me-2"/>Pokaz Rozliczenia
-            </Dropdown.Item>
-            <Dropdown.Item className="fw-bold" onClick={()=>{
-                 setIsFakturyShow(true)
-                 setIsRozliczeniaShow(false)
-                 setIsKierowcyShow(false)
-            }}>
-              <FontAwesomeIcon icon={faCloudUploadAlt} className="me-2" />Pokaż Pokaż Faktury
             </Dropdown.Item>
 
             <Dropdown.Divider />
@@ -192,7 +231,7 @@ export default () => {
                   {isFakturyShow && 
                   <React.Fragment>
                     <h2 className="text-center my-5">Faktury</h2>
-                    <PageFakturyTable />
+                    <PageFakturyTable faktury={faktury} docs={fakturyDocs} />
                   </React.Fragment>}
                 {isRozliczShow && 
                 <React.Fragment>

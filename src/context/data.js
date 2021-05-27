@@ -7,6 +7,8 @@ export const DataContext = createContext({
     faktury:[],
     rozliczenia:[],
     umowy:[],
+    fakturyDocs:[],
+    setFakturyDocs:()=>{},
     setUser:()=>{},
     setUsers:()=>{},
     setFaktury:()=>{},
@@ -20,9 +22,11 @@ export const DataProvider = ({children}) =>{
     const [user,setUser] = useState({})
     const [users,setUsers] = useState([])
     const [faktury,setFaktury] = useState([])
+    const [fakturyDocs,setFakturyDocs] = useState([])
     const [rozliczenia,setRozliczenia] = useState([])
     const [umowy,setUmowy] = useState([])
     useEffect(()=>{
+
         if(users.length === 0){
             axios.get('http://localhost:5000/users')
             .then(res => setUsers(res.data))
@@ -34,12 +38,30 @@ export const DataProvider = ({children}) =>{
             loggedUser = JSON.parse(loggedUser)
             setUser(loggedUser)
         }
-       
-    
+        if(umowy.length === 0){
+           axios.get('http://localhost:5000/umowy')
+            .then(res => setUmowy(res.data))
+            .catch(err => {if(err) throw err})
+        }
+        if(faktury.length === 0){
+            axios.get('http://localhost:5000/faktury')
+             .then(res => setFaktury(res.data))
+             .catch(err => {if(err) throw err})
+         }
+        if(fakturyDocs.length === 0){
+            axios.get('http://localhost:5000/faktury/docs')
+             .then(res => setFakturyDocs(res.data))
+             .catch(err => {if(err) throw err})
+        }
+
         
     },[users,user])
 
-
+    const handleLoad = () =>{
+        setInterval(()=>{
+            
+        },10000)
+    }
 
     return(
         <DataContext.Provider value={{
@@ -48,6 +70,8 @@ export const DataProvider = ({children}) =>{
               rozliczenia,
               umowy,
               user,
+              fakturyDocs,
+              setFakturyDocs:()=>{},
               setUser,
               setUsers,
               setFaktury,

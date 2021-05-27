@@ -12,7 +12,7 @@ export const GeneralInfoForm = () => {
   const [birthday, setBirthday] = useState("");
   const {user, setUser } = useContext(DataContext)
   
-  const {_id, login,email,imie,nazwisko,dataUrodzin,plec,pesel,telefon,nrDowodu,auto,wojewodztwo,adres,nrDomu,miasto,zip} = user
+  const {_id, login,email,imie,nazwisko,dataUrodzin,plec,pesel,telefon,nrDowodu,auto,wojewodztwo,adres,nrDomu,miasto,zip,pojazd,nrRej} = user
   
 
   const handleChange = (e) =>{
@@ -126,6 +126,21 @@ export const GeneralInfoForm = () => {
                 </Form.Select>
               </Form.Group>
             </Col>
+          </Row>
+          <Row>
+            <Col md={6} className="mb-3">
+              <Form.Group id="pojazd">
+                <Form.Label>Pojazd</Form.Label>
+                <Form.Control onChange={(e)=>{handleChange(e)}}  type="number" placeholder="Podaj Pojazd" name="pojazd" value={pojazd} />
+              </Form.Group>
+            </Col>
+            <Col md={6} className="mb-3">
+              <Form.Group id="nrRej">
+                <Form.Label>Nr.Rejestracji</Form.Label>
+                <Form.Control onChange={(e)=>{handleChange(e)}}  type="number" placeholder="Podaj Rejestracje" name="nrRej" value={nrRej} />
+              </Form.Group>
+            </Col>
+           
           </Row>
 
           <h5 className="my-4">Adres</h5>

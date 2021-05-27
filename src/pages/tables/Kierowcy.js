@@ -1,13 +1,14 @@
 
-import React from "react";
+import React,{useContext} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { Breadcrumb } from '@themesberg/react-bootstrap';
 import {kierowcy} from '../../data/kierowcy'
 import { PageTrafficTable, PageKierowcyTableView } from "../../components/Tables";
-
+import {DataContext} from '../../context/data'
 
 export default () => {
+  const {users} = useContext(DataContext)
   return (
     <>
       <div className="d-xl-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
@@ -23,7 +24,7 @@ export default () => {
           </p>
         </div>
       </div>
-        <PageKierowcyTableView kierowcy={kierowcy}/>
+        <PageKierowcyTableView kierowcy={users} />
     </>
   );
 };

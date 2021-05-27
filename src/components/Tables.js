@@ -7,7 +7,8 @@ import { Routes } from "../routes";
 import { pageVisits, pageTraffic, pageRanking, pageEmails } from "../data/tables";
 import transactions from "../data/transactions";
 import commands from "../data/commands";
-import { faktury } from '../data/faktury';
+import { propTypes } from "@themesberg/react-bootstrap/lib/esm/Image";
+import axios from 'axios'
 
 const ValueChange = ({ value, suffix }) => {
   const valueIcon = value < 0 ? faAngleDown : faAngleUp;
@@ -24,17 +25,29 @@ const ValueChange = ({ value, suffix }) => {
 };
 
 export const PageUmowyTable = (props) =>{
-  const { umowy } = props
+  const { umowy  } = props
   const TableRow = (props) => {
-    const { id, data, rodzaj, link } = props;
+    const { index } = props
+    const { _id,filename} = props.umowa
+    const { imie,nazwisko, rodzaj, data } = props.umowa.metadata;
   
+    const handleDelete = (filename) =>{
+      axios.delete('http://localhost:5000/umowy/delete/' + filename)
+        .then(res=>{ 
+          console.log(res)
+          window.location.reload()
+      })
+        .catch(err => {if(err) throw err})
+    }
 
     return (
       <tr>
-        <td scope="row">{id}</td>
+        <td scope="row">{index}</td>
+        <td>{imie} {nazwisko}</td>
+        <td>{rodzaj.replaceAll('-',' ')}</td>
         <td>{data}</td>
-        <td>{rodzaj}</td>
-        <td>{link}</td>
+        <td><a href={`http://localhost:5000/umowy/umowa/${filename}`}><Button>Pokaż Umowę</Button></a></td>
+        <td><Button onClick={()=>handleDelete(filename)}>Usuń</Button></td>
       </tr>
     );
   };
@@ -54,14 +67,16 @@ export const PageUmowyTable = (props) =>{
       <Table responsive className="align-items-center table-flush">
         <thead className="thead-light">
           <tr>
-            <th scope="col">Id</th>
+            <th scope="col">Nr</th>
+            <th scope="col">Imie I Nazwisko</th>
+            <th scope="col">Rodzaj</th>
             <th scope="col">Data</th>
-            <td scope="col">Rodzaj</td>
-            <td scope="col">Link</td>
+            <th scope="col">Link</th>
+            <th scope="col">Usuń</th>
           </tr>
         </thead>
         <tbody>
-          {umowy.map(umowa => <TableRow key={umowa.id} {...umowa} />)}
+          {umowy.map((umowa,index) => <TableRow key={umowa._id} umowa={umowa} index={index+1} />)}
         </tbody>
       </Table>
     </Card>
@@ -69,22 +84,37 @@ export const PageUmowyTable = (props) =>{
 };
 
 export const PageFakturyTable = (props) => {
+  const {faktury,docs} = props
+  console.log(props)
   const TableRow = (props) => {
+    const  index  = props.index 
+    const { userId , data, kwota, nip, płatność } = props.faktury;
 
-    const { id, data, link, kwota, nip, płatność } = props;
+      if(docs.length > 0){
+        var documents = props.docs.filter(doc => doc.metadata.userId === userId)
+        if(documents.length > 0){
+          var { filename } = documents[index-1]
+        } else{
+          console.log('cant find document')
+        }
+      }
+
+
+
     return (
       <tr>
         <td>
-          <Card.Link href="#" className="text-primary fw-bold">{id}</Card.Link>
+          <Card.Link href="#" className="text-primary fw-bold">{index}</Card.Link>
         </td>
         <td className="fw-bold">
           <FontAwesomeIcon icon className={`icon icon-xs text-black w-30`} />
           {data}
         </td>
-        <td>{link}</td>
         <td>{kwota}</td>
         <td>{nip}</td>
         <td>{płatność}</td>
+        <td><a href={`http://localhost:5000/faktury/docs/${filename}`}><Button>Zobacz Fakturę</Button></a></td>
+        <td><Button>Usun Fakturę</Button></td>
       </tr>
     );
   };
@@ -105,16 +135,17 @@ export const PageFakturyTable = (props) => {
         <Table responsive className="table-centered table-nowrap table-hover rounded mb-0">
           <thead className="thead-light">
             <tr>
-              <th className="border-0">Id</th>
+              <th className="border-0">Nr</th>
               <th className="border-0">Data dodania</th>
-              <th className="border-0">Pobierz</th>
               <th className="border-0">Kwota</th>
               <th className="border-0">Nip</th>
               <th className="border-0">Forma Płatności</th>
+              <th className="border-0">Zobacz Fakturę</th>
+              <th className="border-0">Usuń Fakturę</th>
             </tr>
           </thead>
           <tbody>
-            {faktury.map(faktura => <TableRow key={faktura.id} {...faktura} />)}
+            {faktury.map((faktura,index) => <TableRow key={faktura._id} faktury={faktura} docs={docs} index={index+1}/>)}
           </tbody>
         </Table>
       </Card.Body>
