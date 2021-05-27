@@ -88,7 +88,7 @@ export const PageFakturyTable = (props) => {
   console.log(props)
   const TableRow = (props) => {
     const  index  = props.index 
-    const { userId , data, kwota, nip, płatność } = props.faktury;
+    const { _id, userId , data, kwota, nip, płatność } = props.faktury;
 
       if(docs.length > 0){
         var documents = props.docs.filter(doc => doc.metadata.userId === userId)
@@ -99,7 +99,14 @@ export const PageFakturyTable = (props) => {
         }
       }
 
-
+    const handleDelete = (_id,filename) =>{
+      axios.delete('http://localhost:5000/faktury/delete/' + _id)
+        .then(res=>console.log('data deleted'))
+        .catch(err => console.log(err))
+      axios.delete('http://localhost:5000/faktury/docs/delete/' + filename)
+        .then(res=> window.location.reload())
+        .catch(err => console.log(err))
+    }
 
     return (
       <tr>
@@ -114,7 +121,7 @@ export const PageFakturyTable = (props) => {
         <td>{nip}</td>
         <td>{płatność}</td>
         <td><a href={`http://localhost:5000/faktury/docs/${filename}`}><Button>Zobacz Fakturę</Button></a></td>
-        <td><Button>Usun Fakturę</Button></td>
+        <td><Button onClick={()=>handleDelete(_id,filename)}>Usun Fakturę</Button></td>
       </tr>
     );
   };
