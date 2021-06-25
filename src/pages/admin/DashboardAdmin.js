@@ -36,41 +36,16 @@ const DashboardAdmin = (props) => {
 
 
   const { handleShowUser, handleSetUser } = useContext(DataContext)
-
   const { user, users } = props.users
   const { faktury } = props.faktury
   const { umowy } = props.umowy
   const { rozliczenia } = props.rozliczenia
-
-  const { setFaktury, setRozliczenia, setUmowy, setUsers ,setUser } = props
+  
+  const [usersOptions,setUserOptions] = useState(users)
+  const { setFaktury, setRozliczenia, setUmowy, setUsers ,setUser, handleActiveUser, handleDeleteUser, filterUsersById } = props
   
 
-  console.log(props)
 
-  const handleActive = (id,isActive) =>{
-    if(isActive){
-      isActive = false
-    }else{
-      isActive = true
-    }
-    const user = {
-      isActive
-    }
-    axios.post('http://localhost:5000/users/state/' + id ,user)
-      .then(res => {
-        // setUsers([])
-        window.location.reload()
-      })
-      .catch(err => {if(err) throw err})
-  }
-
-  const handleDelete = (id) =>{
-    axios.delete('http://localhost:5000/users/delete/' + id)
-    .then(res => {
-      // setUsers([])
-      window.location.reload()
-    })
-  }
 
  
   useEffect(()=>{
@@ -79,6 +54,7 @@ const DashboardAdmin = (props) => {
     setUmowy()
     setUsers()
     setUser()
+    setUserOptions(users)
   },[])
 
   return (
@@ -232,14 +208,14 @@ const DashboardAdmin = (props) => {
                     <Form.Group className="mb-2">
                         <Form.Label>Wybierz Kierowcę</Form.Label>
                         {/* onChange={(e)=>{handleShowUser(e.target.value)}} */}
-                        <Form.Select id="state" defaultValue="0"> 
-                          {users.map(user =>{
+                        <Form.Select id="kierowcy" defaultValue="0" onChange={(e)=>{filterUsersById(e.target.value)}}> 
+                          {usersOptions.map(user =>{
                             return <option value={user._id}>{user.imie} {user.nazwisko}</option>
                           })}
                         </Form.Select>
                       </Form.Group>
                     </Form>
-                  <PageKierowcyTable umowy={umowy} users={users} handleActive={handleActive} handleDelete={handleDelete} />
+                  <PageKierowcyTable {...props} handleActive={handleActiveUser} handleDelete={handleDeleteUser} />
                </React.Fragment>}
                {isRozliczeniaShow && 
                <React.Fragment>
@@ -248,7 +224,7 @@ const DashboardAdmin = (props) => {
                   <Form.Group className="mb-2">
                       <Form.Label>Wybierz Kierowcę</Form.Label>
                       <Form.Select id="state" defaultValue="0">
-                      {users.map(user =>{
+                      {usersOptions.map(user =>{
                             return <option>{user.imie} {user.nazwisko}</option>
                           })}
                       </Form.Select>
@@ -276,14 +252,14 @@ const DashboardAdmin = (props) => {
                     <Form className="my-4">
                       <Form.Group>
                         <Form.Label>Wybierz Kierowcę</Form.Label>
-                          <Form.Select id="state" defaultValue="0">
-                          {users.map(user =>{
-                                return <option>{user.imie} {user.nazwisko}</option>
+                          <Form.Select id="users" defaultValue="0" onChange={(e)=>{filterUsersById(e.target.value)}}>
+                          {usersOptions.map(user =>{
+                                return <option value={user._id}>{user.imie} {user.nazwisko}</option>
                               })}
                         </Form.Select>
                       </Form.Group>
                     </Form>
-                    <PageFakturyTable faktury={faktury} user={user} />
+                    <PageFakturyTable {...props} />
                   </React.Fragment>}
                 {isRozliczShow && 
                 <React.Fragment>

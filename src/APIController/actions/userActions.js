@@ -1,4 +1,4 @@
-import { SET_USER,SET_USER_BY_ID,MODIFY_USER,MODIFY_PROFILE,HANDLE_CHANGE_USER,REGISTER_USER,LOGIN_USER, SET_USERS, SET_LOGGED_USER, HANDLE_USER,SET_IS_ROZLICZ_SHOW, HANDLE_SHOW_USER, HANDLE_SHOW_ALL_USERS } from '../../APIController/actions/types'
+import { SET_USER,SET_USER_BY_ID,MODIFY_USER,MODIFY_PROFILE,FILTER_USERS_BY_ID,HANDLE_DELETE_USER,HANDLE_ACTIVE_USER,HANDLE_CHANGE_USER,REGISTER_USER,LOGIN_USER, SET_USERS, SET_LOGGED_USER, HANDLE_USER,SET_IS_ROZLICZ_SHOW, HANDLE_SHOW_USER, HANDLE_SHOW_ALL_USERS } from '../../APIController/actions/types'
 import axios from 'axios'
 import store from '../store'
 
@@ -132,6 +132,71 @@ const handleChangeUser = (e) => dispatch =>{
     })
 }
 
+const handleActiveUser = (id,isActive) => dispatch =>{
+    if(isActive){
+        isActive = false
+      }else{
+        isActive = true
+      }
+      const user = {
+        isActive
+      }
+      axios.post('http://localhost:5000/users/state/' + id ,user)
+        .then(res => {
+          // setUsers([])
+          dispatch({
+              type:HANDLE_ACTIVE_USER
+          })
+          window.location.reload()
+        })
+        .catch(err => {if(err) throw err})
+
+    axios.get('http://localhost:5000/users')
+        .then(res => {
+            dispatch({
+                type:SET_USERS,
+                payload:res.data
+            })
+        })
+        .catch(err => {if(err) throw err})
+        
+}
+
+
+const handleDeleteUser = (id) => dispatch =>{
+    console.log('deleted')
+    axios.delete('http://localhost:5000/users/delete/' + id)
+    .then(res => {
+      // setUsers([])
+      dispatch({
+          type:HANDLE_DELETE_USER
+      })
+      window.location.reload()
+    })
+    .catch(err => {if(err) throw err})
+
+    axios.get('http://localhost:5000/users')
+        .then(res => {
+            dispatch({
+                type:SET_USERS,
+                payload:res.data
+            })
+        })
+        .catch(err => {if(err) throw err})
+}
+
+const filterUsersById = (id) => dispatch =>{
+    axios.get('http://localhost:5000/users/user/' + id)
+        .then(res => {
+            dispatch({
+                type:FILTER_USERS_BY_ID,
+                payload:[res.data]
+            })
+        })
+        .catch(err => console.log(err))
+   
+}
+
 export const userActions = {
     setUser,
     setUserById,
@@ -143,5 +208,8 @@ export const userActions = {
     handleUser,
     handleChangeUser,
     showUser,
-    showAllUsers
+    showAllUsers,
+    handleActiveUser,
+    handleDeleteUser,
+    filterUsersById
 }

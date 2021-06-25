@@ -7,11 +7,6 @@ import axios from 'axios'
 import { DataContext } from '../APIController/data'
 import { Form } from '@themesberg/react-bootstrap';
 
-import { connect } from 'react-redux'
-import { userActions } from '../APIController/actions/userActions'
-import { umowyActions } from '../APIController/actions/umowyActions'
-import { fakturyActions } from '../APIController/actions/fakturyActions'
-import { rozliczeniaActions } from '../APIController/actions/rozliczeniaActions'
 
 const ValueChange = ({ value, suffix }) => {
   const valueIcon = value < 0 ? faAngleDown : faAngleUp;
@@ -163,14 +158,17 @@ export const PageFakturyTable = (props) => {
 
 export const PageKierowcyTable = (props) =>{
   const { user, handleShowAllUsers} = useContext(DataContext)
-  const { users, handleActive, handleDelete } = props
+  const { users } = props.users
+  
 
   const TableRow = (props) => {
-  const { _id,index, imie, nazwisko, email, umowa, auto, doWyplaty, isActive,handleDelte,handleActive} = props;
+  const { _id,index, imie, nazwisko, email, umowa, auto, doWyplaty, isActive,handleActiveUser,handleDeleteUser} = props;
   const [umowy,setUmowy] = useState([])
+
   axios.get('http://localhost:5000/umowy/' + _id)
     .then(res => setUmowy([...res.data]))
     .catch(err => console.log(err))
+    
     return (
      <tr>
        <td>
@@ -197,8 +195,8 @@ export const PageKierowcyTable = (props) =>{
        <td>{auto ? "Na Moim" : "Na Swoim"}</td>
        <td>{doWyplaty}</td>
        <td>{isActive ? "Aktywne" : "Nieaktywne"}</td>
-       <td onClick={(e)=>{handleDelete(_id)}}><Button>Usuń</Button></td>
-       <td onClick={(e)=>{handleActive(_id,isActive)}}><Button>{isActive ? "dezaktywuj" : "aktywuj"}</Button></td>
+       <td onClick={(e)=>{handleDeleteUser(_id)}}><Button>Usuń</Button></td>
+       <td onClick={(e)=>{handleActiveUser(_id,isActive)}}><Button>{isActive ? "dezaktywuj" : "aktywuj"}</Button></td>
      </tr>
      );
      }
@@ -233,9 +231,8 @@ return (
             {users.filter(item=> item._id !== user._id ).map((kierowca,index) => <TableRow 
             user={user}
             key={kierowca._id} {...kierowca} 
-            handleDelete={handleDelete} 
-            handleActive={handleActive} 
             index={index+1} 
+            {...props}
             />)}
           </tbody>
         </Table>
