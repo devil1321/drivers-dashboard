@@ -4,17 +4,22 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft, faEnvelope, faUnlockAlt } from "@fortawesome/free-solid-svg-icons";
 import { faFacebookF, faGithub, faTwitter } from "@fortawesome/free-brands-svg-icons";
 import { Col, Row, Form, Card, Button, FormCheck, Container, InputGroup } from '@themesberg/react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import  axios  from 'axios'
 import { Routes } from "../../routes";
 import BgImage from "../../assets/img/illustrations/signin.svg";
-import {useHistory} from 'react-router-dom'
-import {DataContext} from '../../context/data'
+import {DataContext} from '../../APIController/data'
 
-export default () => {
-  const history = useHistory()
+import { connect } from 'react-redux'
+import { userActions } from '../../APIController/actions/userActions'
+
+
+const Signin = (props) => {
   
-  const {user, setUser } = useContext(DataContext)
+  const history = useHistory()
+  const { loginUser, setLoggedUser } = props
+
+  const { user } = props.users
 
   const [formData,setFormData] = useState({
     email:'',
@@ -30,20 +35,13 @@ export default () => {
 
   const handleLogin = async (e) =>{
     e.preventDefault()
-    axios.post('http://localhost:5000/users/login',formData)
-      .then(res => {
-        localStorage.setItem('User',JSON.stringify(res.data))
-        if(res.data.isAdmin){
-          history.push('/dashboard/admin')
-        }else{
-          history.push('/dashboard/overview')
-        }
-      })
-      .catch(err => {if(err) throw err})
+    loginUser(formData)
+    if(user.isAdmin){
+      history.push('/dashboard/admin')
+    }else{
+      history.push('/dashboard/overview')
+    }
   }
-
-  useEffect(()=>{
-  },[user])
 
   return (
     <main>
@@ -123,3 +121,10 @@ export default () => {
     </main>
   );
 };
+
+const mapStateToProps = state => ({
+  ...state
+})
+
+
+export default connect(mapStateToProps,userActions)(Signin)

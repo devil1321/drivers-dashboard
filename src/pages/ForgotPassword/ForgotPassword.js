@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import { Routes } from "../../routes";
 
 
-export default () => {
+const ForgotPassword = () => {
   return (
     <main>
       <section className="vh-lg-100 mt-4 mt-lg-0 bg-soft d-flex align-items-center">
@@ -42,3 +42,4 @@ export default () => {
     </main>
   );
 };
+export default ForgotPassword

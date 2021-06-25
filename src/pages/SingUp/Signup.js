@@ -10,8 +10,10 @@ import axios from 'axios'
 import { Routes } from "../../routes";
 import BgImage from "../../assets/img/illustrations/signin.svg";
 
+import { connect } from 'react-redux'
+import { userActions } from '../../APIController/actions/userActions'
 
-export default () => {
+const Singup = (props) => {
   const history = useHistory()
   const [show,setShow] = useState(false)
   const [errors,setErrors] = useState([])
@@ -25,6 +27,9 @@ export default () => {
       wojewodztwo:'dolnośląskie',
       isActive:false
   })
+
+  const { registerUser } = props
+
   useEffect(()=>{
     console.log(formData)
   },[formData,errors,show])
@@ -38,8 +43,8 @@ export default () => {
   }
 
   const handleSubmit = () =>{
-    axios.post('http://localhost:5000/users/register',formData)
-      .then(res => setFormData({  
+      registerUser(formData)
+      setFormData({  
         email:'',
         password:'',
         password:'',
@@ -49,8 +54,8 @@ export default () => {
         wojewodztwo:'dolnośląskie',
         isActive:false,
         isAdmin:false
-      }))
-      .catch(err => {if(err) throw err})
+      })
+      history.push('/')
   }
 
   const handleValidate = (e) =>{
@@ -204,3 +209,9 @@ export default () => {
     </main>
   );
 };
+
+const mapStateToProps = (state) =>({
+  ...state
+})
+
+export default connect(mapStateToProps,userActions)(Singup)

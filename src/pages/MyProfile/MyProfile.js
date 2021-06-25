@@ -9,22 +9,22 @@ import Profile3 from "../../assets/img/team/profile-picture-3.jpg";
 import { profile } from "../../data/profile";
 import axios from 'axios'
 
-import {DataContext} from '../../context/data'
+import {DataContext} from '../../APIController/data'
 
-export default () => {
-  const { user } = useContext(DataContext)
+const MyProfile = () => {
+  const { loggedUser } = useContext(DataContext)
 
 
 
   useEffect(()=>{
     
-  },[user])
+  },[loggedUser])
   return (
     <>
     <Col>
       <Row className="py-3">
         <Col xs={12} xl={8}>
-          <GeneralInfoForm user={user}/>
+          <GeneralInfoForm user={loggedUser}/>
         </Col>
 
         <Col xs={12} xl={4}>
@@ -45,3 +45,4 @@ export default () => {
     </>
   );
 };
+export default MyProfile

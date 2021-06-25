@@ -97,7 +97,7 @@ export default (props = {}) => {
               </Nav.Link>
             </div>
             <Nav className="flex-column pt-3 pt-md-0">
-              <NavItem title="Drivers App" icon={faCar} />
+              <NavItem title="Drivers App"  icon={faCar} />
               <NavItem title="Overview" link={Routes.DashboardOverview.path} icon={faChartPie} />
               <NavItem title="Send Email" icon={faFileAlt} link={Routes.SendMail.path} />
               <NavItem title="Messages" icon={faCommentAlt} link={Routes.Messages.path} />

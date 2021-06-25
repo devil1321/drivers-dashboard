@@ -5,10 +5,8 @@ import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { Breadcrumb } from '@themesberg/react-bootstrap';
 import {kierowcy} from '../../data/kierowcy'
 import { PageTrafficTable, PageKierowcyTableView } from "../../components/Tables";
-import {DataContext} from '../../context/data'
 
-export default () => {
-  const {users} = useContext(DataContext)
+const KierowcyMainTable = () => {
   return (
     <>
       <div className="d-xl-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
@@ -24,7 +22,9 @@ export default () => {
           </p>
         </div>
       </div>
-        <PageKierowcyTableView kierowcy={users} />
+        <PageKierowcyTableView/>
     </>
   );
 };
+
+export default KierowcyMainTable

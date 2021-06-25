@@ -1,13 +1,16 @@
-
-import React from "react";
+import React,{useContext} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { Breadcrumb } from '@themesberg/react-bootstrap';
 
 import { PageFakturyTable, RankingTable } from "../../components/Tables";
+import { DataContext } from '../../APIController/data'
 
 
-export default () => {
+
+const FakturyMainTable = () => {
+  const { user, faktury } = useContext(DataContext)
+
   return (
     <>
       <div className="d-xl-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
@@ -24,7 +27,8 @@ export default () => {
         </div>
       </div>
 
-      <PageFakturyTable />
+      <PageFakturyTable faktury={faktury} user={user} />
     </>
   );
 };
+export default FakturyMainTable

@@ -11,7 +11,7 @@ import NOTIFICATIONS_DATA from "../data/notifications";
 import Profile3 from "../assets/img/team/profile-picture-3.jpg";
 
 import axios from 'axios'
-import {DataContext} from '../context/data'
+import {DataContext} from '../APIController/data'
 
 
 export default (props) => {

@@ -5,7 +5,7 @@ import Datetime from "react-datetime";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Card, Form, Button, InputGroup } from '@themesberg/react-bootstrap';
-import {DataContext} from '../context/data'
+import {DataContext} from '../APIController/data'
 import axios from 'axios'
 
 export const GeneralInfoForm = () => {

@@ -1,14 +1,17 @@
-import React,{useEffect,useState} from "react";
+import React,{useEffect,useState,useContext} from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleDown, faAngleUp, faArrowDown, faArrowUp, faEdit, faEllipsisH, faExternalLinkAlt, faEye, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { Col, Row, Nav, Card, Image, Button, Table, Dropdown, ProgressBar, Pagination, ButtonGroup,ListGroup } from '@themesberg/react-bootstrap';
-import { Link } from 'react-router-dom';
-import { Routes } from "../routes";
-import { pageVisits, pageTraffic, pageRanking, pageEmails } from "../data/tables";
-import transactions from "../data/transactions";
-import commands from "../data/commands";
-import { propTypes } from "@themesberg/react-bootstrap/lib/esm/Image";
+import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
+import { Col, Row, Card, Button, Table, ProgressBar, ListGroup } from '@themesberg/react-bootstrap';
+import { pageTraffic, pageEmails } from "../data/tables";
 import axios from 'axios'
+import { DataContext } from '../APIController/data'
+import { Form } from '@themesberg/react-bootstrap';
+
+import { connect } from 'react-redux'
+import { userActions } from '../../APIController/actions/userActions'
+import { umowyActions } from '../../APIController/actions/umowyActions'
+import { fakturyActions } from '../../APIController/actions/fakturyActions'
+import { rozliczeniaActions } from '../../APIController/actions/rozliczeniaActions'
 
 const ValueChange = ({ value, suffix }) => {
   const valueIcon = value < 0 ? faAngleDown : faAngleUp;
@@ -28,10 +31,10 @@ export const PageUmowyTable = (props) =>{
   const { umowy, user } = props
   const loggedUserId = user._id
   const isAdmin = user.isAdmin
-  if(umowy.length > 0){
+  if(umowy.length > 0 && !isAdmin){
     var documents = umowy.filter(faktura => faktura.metadata.userId === loggedUserId)
   }else{
-    var documents = umowy
+    var documents = umowy.filter(faktura => faktura.metadata.userId !== loggedUserId)
   }
   const TableRow = (props) => {
     const { index } = props
@@ -94,11 +97,6 @@ export const PageFakturyTable = (props) => {
   const { faktury, user } = props
   const loggedUserId = user._id
   const isAdmin = user.isAdmin
-  if(faktury.length > 0){
-    var documents = faktury.filter(faktura => faktura.metadata.userId === loggedUserId)
-  }else{
-    var documents = faktury
-  } 
   const TableRow = (props) =>  {
       const index  = props.index 
       const { filename } = props.faktura
@@ -155,7 +153,7 @@ export const PageFakturyTable = (props) => {
             </tr>
           </thead>
           <tbody>
-            {documents.map((faktura,index) => <TableRow key={faktura._id} faktura={faktura} user={user} index={index+1}/>)}
+            {faktury.map((faktura,index) => <TableRow key={faktura._id} faktura={faktura} user={user} index={index+1}/>)}
           </tbody>
         </Table>
       </Card.Body>
@@ -164,28 +162,46 @@ export const PageFakturyTable = (props) => {
 };
 
 export const PageKierowcyTable = (props) =>{
-  const {kierowcy,handleDelete,handleActive} = props
+  const { user, handleShowAllUsers} = useContext(DataContext)
+  const { users, handleActive, handleDelete } = props
+
   const TableRow = (props) => {
   const { _id,index, imie, nazwisko, email, umowa, auto, doWyplaty, isActive,handleDelte,handleActive} = props;
-return (
-  <tr>
-    <td>
-      <Card.Link href="#" className="text-primary fw-bold">{index}</Card.Link>
-    </td>
-    <td className="fw-bold">
-      <FontAwesomeIcon icon className={`icon icon-xs text-black w-30`} />
-      {imie} {nazwisko}
-    </td>
-    <td>{email}</td>
-    <td>{umowa}</td>
-    <td>{auto}</td>
-    <td>{doWyplaty}</td>
-    <td>{isActive ? "Aktywne" : "Nieaktywne"}</td>
-    <td onClick={(e)=>{handleDelete(_id)}}><span>Usuń</span></td>
-    <td onClick={(e)=>{handleActive(_id,isActive)}}><span>{isActive ? "dezaktywuj" : "aktywuj"}</span></td>
-  </tr>
-  );
-  }
+  const [umowy,setUmowy] = useState([])
+  axios.get('http://localhost:5000/umowy/' + _id)
+    .then(res => setUmowy([...res.data]))
+    .catch(err => console.log(err))
+    return (
+     <tr>
+       <td>
+         <Card.Link href="#" className="text-primary fw-bold">{index}</Card.Link>
+       </td>
+       <td className="fw-bold">
+         <FontAwesomeIcon icon className={`icon icon-xs text-black w-30`} />
+         {imie} {nazwisko}
+       </td>
+       <td>{email}</td>
+       <td className="kierowcy-umowa-select">
+       <Form>
+         <Form.Group>
+         <Form.Select id="rodzaj umowy" defaultValue="default" name='rodzaj' onChange={(e)=>{window.location.href = `http://localhost:5000/umowy/umowa/${e.target.value}`}}>
+             <option value="default" disabled>Umowy</option>
+             {umowy.map(umowa => {
+                 let umowaText = umowa.metadata.rodzaj.replaceAll("-"," ")
+                 return <option value={umowa.filename}>{umowaText}</option>
+               })}
+           </Form.Select>
+         </Form.Group>
+         </Form>
+       </td>
+       <td>{auto ? "Na Moim" : "Na Swoim"}</td>
+       <td>{doWyplaty}</td>
+       <td>{isActive ? "Aktywne" : "Nieaktywne"}</td>
+       <td onClick={(e)=>{handleDelete(_id)}}><Button>Usuń</Button></td>
+       <td onClick={(e)=>{handleActive(_id,isActive)}}><Button>{isActive ? "dezaktywuj" : "aktywuj"}</Button></td>
+     </tr>
+     );
+     }
 return (
     <Card border="light" className="shadow-sm mb-4">
     <Card.Header>
@@ -194,7 +210,7 @@ return (
             <h5>Kierowcy</h5>
           </Col>
           <Col className="text-end">
-            <Button variant="secondary" size="sm">See all</Button>
+            <Button variant="secondary" size="sm" onClick={()=>handleShowAllUsers()} >See all</Button>
           </Col>
         </Row>
       </Card.Header>
@@ -205,7 +221,7 @@ return (
               <th className="border-0">Nr</th>
               <th className="border-0">Imie I Nazwisko</th>
               <th className="border-0">Email</th>
-              <th className="border-0">Umowa</th>
+              <th className="border-0 kierowcy-umowa-select">Umowy</th>
               <th className="border-0">Auto</th>
               <th className="border-0">Do Wypłaty</th>
               <th className="border-0">Stan Konta</th>
@@ -214,7 +230,13 @@ return (
             </tr>
           </thead>
           <tbody>
-            {kierowcy.map((kierowca,index) => <TableRow key={kierowca._id} {...kierowca} handleDelete={handleDelete} handleActive={handleActive} index={index+1} />)}
+            {users.filter(item=> item._id !== user._id ).map((kierowca,index) => <TableRow 
+            user={user}
+            key={kierowca._id} {...kierowca} 
+            handleDelete={handleDelete} 
+            handleActive={handleActive} 
+            index={index+1} 
+            />)}
           </tbody>
         </Table>
       </Card.Body>
@@ -222,23 +244,46 @@ return (
   )
 };
 
-export const PageKierowcyTableView = (props) =>{
-  const {kierowcy} = props
-  const TableRow = (props) => {
+const PageKierowcyTableView = (props) =>{
+  const {users,user,umowy, loggedUser ,handleShowAllUsers} = useContext(DataContext)
 
-const { id, imie, nazwisko, email, umowa, auto, doWyplaty, isActive } = props;
+  const TableRow = (props) => {
+    const { _id, index, imie, nazwisko, email,  auto, doWyplaty, isActive } = props;
+    const { umowy } = props
+    const { loggeduser } = props
+    const umowyKierowcy = umowy.filter(umowa => umowa.metadata.userId === _id)
+
 return (
-  <tr>
+  <tr scopre="row">
     <td>
-      <Card.Link href="#" className="text-primary fw-bold">{id}</Card.Link>
+      <Card.Link href="#" className="text-primary fw-bold">{index}</Card.Link>
     </td>
     <td className="fw-bold">
       <FontAwesomeIcon icon className={`icon icon-xs text-black w-30`} />
       {imie} {nazwisko}
     </td>
     <td>{email}</td>
-    <td>{umowa}</td>
-    <td>{auto}</td>
+    <td className="kierowcy-umowa-select">
+    <Form>
+      <Form.Group>
+      <Form.Select id="rodzaj umowy" defaultValue="default" name='rodzaj' onChange={(e)=>{window.location.href = `http://localhost:5000/umowy/umowa/${e.target.value}`}}>
+          <option  value="default" disabled>Umowy</option>
+          {loggedUser.isAdmin ? (
+            umowyKierowcy.map(umowa => {
+              let umowaText = umowa.metadata.rodzaj.replaceAll("-"," ")
+              return <option value={umowa.filename}>{umowaText}</option>
+            }))
+            :
+            (umowyKierowcy.filter(umowa => umowa.metadata.userId === loggedUser._id).map(umowa => {
+              let umowaText = umowa.metadata.rodzaj.replaceAll("-"," ")
+              return <option value={umowa.filename}>{umowaText}</option>
+            })
+            )}
+        </Form.Select>
+      </Form.Group>
+      </Form>
+    </td>
+    <td>{auto ? "Na Moim" : "Na Swoim"}</td>
     <td>{doWyplaty}</td>
     <td>{isActive ? "Aktywne" : "Nieaktywne"}</td>
   </tr>
@@ -252,7 +297,7 @@ return (
             <h5>Kierowcy</h5>
           </Col>
           <Col className="text-end">
-            <Button variant="secondary" size="sm">See all</Button>
+            <Button variant="secondary" size="sm" onClick={()=>handleShowAllUsers()}>See all</Button>
           </Col>
         </Row>
       </Card.Header>
@@ -260,17 +305,17 @@ return (
         <Table responsive className="table-centered table-nowrap table-hover rounded mb-0">
           <thead className="thead-light">
             <tr>
-              <th className="border-0">Id</th>
+              <th className="border-0" scope="col">Nr</th>
               <th className="border-0">Imie I Nazwisko</th>
               <th className="border-0">Email</th>
-              <th className="border-0">Umowa</th>
+              <th className="border-0 kierowcy-umowa-select">Umowa</th>
               <th className="border-0">Auto</th>
               <th className="border-0">Do Wypłaty</th>
               <th className="border-0">Stan Konta</th>
             </tr>
           </thead>
           <tbody>
-            {kierowcy.map(kierowca => <TableRow key={kierowca.id} {...kierowca} />)}
+            {users.filter(item=> item._id !== user._id ).map((kierowca,index) => <TableRow key={kierowca.id} {...kierowca} umowy={umowy} loggedUser={loggedUser} index={index+1} />)}
           </tbody>
         </Table>
       </Card.Body>

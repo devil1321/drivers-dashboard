@@ -9,7 +9,7 @@ import Profile3 from "../../assets/img/team/profile-picture-3.jpg";
 import { profile } from "../../data/profile";
 
 
-export default () => {
+const Settings = () => {
   return (
     <>
     <Col>
@@ -36,3 +36,4 @@ export default () => {
     </>
   );
 };
+export default Settings

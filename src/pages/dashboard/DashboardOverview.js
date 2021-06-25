@@ -5,26 +5,42 @@ import { faCashRegister, faChartLine, faCloudUploadAlt, faPlus, faRocket, faTask
 import { Col, Row, Button, Dropdown, ButtonGroup } from '@themesberg/react-bootstrap';
 import { Nav, Tab } from '@themesberg/react-bootstrap';
 import { CounterWidget, CircleChartWidget, BarChartWidget, TeamMembersWidget, ProgressTrackWidget, RankingWidget, SalesValueWidget, SalesValueWidgetPhone, AcquisitionWidget } from "../../components/Widgets";
-import { PageVisitsTable } from "../../components/Tables";
-import { trafficShares, totalOrders } from "../../data/charts";
 import { PageRozliczeniaNaMoimAucieTable,PageRozliczeniaNaSwoimAucieTable,PageFakturyTable,PageUmowyTable } from "../../components/Tables";
 import { rozliczenia } from '../../data/rozliczenia'
 import { Form, InputGroup } from '@themesberg/react-bootstrap';
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { DataContext } from '../../context/data'
-
+import { DataContext } from '../../APIController/data'
 
 import axios from 'axios'
 
-export default () => {
+import { connect } from 'react-redux'
+import { userActions } from '../../APIController/actions/userActions'
+import { umowyActions } from '../../APIController/actions/umowyActions'
+import { fakturyActions } from '../../APIController/actions/fakturyActions'
+import { rozliczeniaActions } from '../../APIController/actions/rozliczeniaActions'
+
+
+const DashboardOverview = (props) => {
 
   const [isDodajFaktureShow,setIsDodajFaktureShow] = useState(false)
   const [isDodajUmoweShow,setIsDodajUmoweShow] = useState(false)
-  const {user, setUser,umowy,faktury } = useContext(DataContext)
+  const [isSet,setIsSet] = useState(false)
+  const { user } = props.users
+  const { faktury } = props.faktury
+  const { umowy } = props.umowy
+  const { rozliczenia } = props.rozliczenia
+
+  const { setUser, setAllUserFaktury, setAllUserRozliczenia,setAllUserUmowy, addFaktura,addUmowa } = props
 
   useEffect(()=>{
-    console.log('user',user)
-  },[user,faktury])
+    if(!isSet){
+      setUser()
+      setIsSet(true)
+    }
+    setAllUserFaktury(user._id)
+    // setAllUserRozliczenia(user._id) 
+    setAllUserUmowy(user._id)
+  },[isSet])
 
 
   const handleSubmitFaktura = (e) =>{
@@ -33,31 +49,15 @@ export default () => {
       data.append('userId',user._id)
       data.append('imie',user.imie)
       data.append('nazwisko',user.nazwisko)
-      axios.post('http://localhost:5000/faktury/faktura',data,{
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }})
-        .then(res => {
-          console.log(res.data)
-          window.location.reload()
-
-          })
-        .catch(err => {if(err) throw err})
+      addFaktura(data)
   }
+  
   const handleSubmitUmowa = (e) =>{
       const form = document.querySelector('#formUmowa');
       let data = new FormData(form);
       data.append('userId',user._id)
       e.preventDefault();
-      axios.post('http://localhost:5000/umowy/umowa',data,{
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }})
-        .then(res => {
-          console.log(res.data)
-          window.location.reload()
-        })
-        .catch(err => {if(err) throw err})
+      addUmowa(data)
   }
 
     return (
@@ -244,7 +244,7 @@ export default () => {
               </Tab.Pane>
 
               <Tab.Pane eventKey="umowy" className="py-4">
-                <PageUmowyTable umowy={umowy} user={user}/>
+                <PageUmowyTable umowy={umowy} user={user} />
                 {isDodajUmoweShow && 
                 <Form id="formUmowa" onSubmit={(e)=>{handleSubmitUmowa(e)}} className="mt-4">
                 <h2 className="text-center">Dodaj Umowe</h2>
@@ -345,3 +345,11 @@ export default () => {
     </>
   );
 };
+
+const mapStateToProps = state => ({
+  ...state
+})
+
+const actions = Object.assign({}, umowyActions,fakturyActions,userActions,rozliczeniaActions)
+
+export default connect(mapStateToProps,actions)(DashboardOverview)

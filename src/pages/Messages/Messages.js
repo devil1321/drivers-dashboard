@@ -8,7 +8,7 @@ import Profile3 from "../../assets/img/team/profile-picture-3.jpg";
 import { pageEmails } from "../../data/tables";
 
 
-export default () => {
+const Messages = () => {
   return (
     <>
       <h1 className="my-5 text-center">Wiadomości</h1>
@@ -17,4 +17,4 @@ export default () => {
     </>
   );
 };
- 
+export default Messages

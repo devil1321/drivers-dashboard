@@ -9,7 +9,7 @@ import { PageVisitsTable } from "../../components/Tables";
 import { Form, InputGroup } from '@themesberg/react-bootstrap';
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
-export default () => {
+const SendMail = () => {
   return (
     <>
     
@@ -40,3 +40,4 @@ export default () => {
     </>
   );
 };
+export default SendMail

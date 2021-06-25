@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Route, Switch, Redirect } from "react-router-dom";
 import { Routes } from "../routes";
-import { DataProvider } from '../context/data'
+import { DataProvider } from '../APIController/data'
 // pages
 
 import DashboardAdmin from "./admin/DashboardAdmin";
@@ -9,10 +9,10 @@ import DashboardOverview from "./dashboard/DashboardOverview";
 import MyProfile from "./MyProfile/MyProfile";
 import SendMail from "./SendMail/SendMail";
 import Messages from "./Messages/Messages";
-import Kierowcy from "./tables/Kierowcy";
-import Faktury from "./tables/Faktury";
-import Umowy from "./tables/Umowy";
-import Rozliczenia from "./tables/Rozliczenia";
+import KierowcyMainTable from "./tables/Kierowcy";
+import FakturyMainTable from "./tables/Faktury";
+import UmowyMainTable from "./tables/Umowy";
+import RozliczeniaMainTable from "./tables/Rozliczenia";
 
 import Signin from "./SignIn/Signin";
 import Signup from "./SingUp/Signup";
@@ -27,6 +27,7 @@ import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import Preloader from "../components/Preloader";
 
+
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
 
@@ -36,7 +37,7 @@ const RouteWithLoader = ({ component: Component, ...rest }) => {
   }, []);
 
   return (
-    <Route {...rest} render={props => ( <> <Preloader show={loaded ? false : true} /> <Component {...props} /> </> ) } />
+   <Route {...rest} render={props => ( <> <Preloader show={loaded ? false : true} /> <Component {...props} /> </> ) } />
   );
 };
 
@@ -94,10 +95,10 @@ export default () => (
     <RouteWithSidebar exact path={Routes.SendMail.path} component={SendMail} />
     <RouteWithSidebar exact path={Routes.Messages.path} component={Messages} />
     <RouteWithSidebar exact path={Routes.MyProfile.path} component={MyProfile} />
-    <RouteWithSidebar exact path={Routes.Faktury.path} component={Faktury} />
-    <RouteWithSidebar exact path={Routes.Rozliczenia.path} component={Rozliczenia} />
-    <RouteWithSidebar exact path={Routes.Kierowcy.path} component={Kierowcy} />
-    <RouteWithSidebar exact path={Routes.Umowy.path} component={Umowy} />
+    <RouteWithSidebar exact path={Routes.Faktury.path} component={FakturyMainTable} />
+    <RouteWithSidebar exact path={Routes.Rozliczenia.path} component={RozliczeniaMainTable} />
+    <RouteWithSidebar exact path={Routes.Kierowcy.path} component={KierowcyMainTable} />
+    <RouteWithSidebar exact path={Routes.Umowy.path} component={UmowyMainTable} />
 
     <Redirect to={Routes.NotFound.path} />
   </Switch>

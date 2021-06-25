@@ -1,13 +1,15 @@
 
-import React from "react";
+import React,{useContext} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { Breadcrumb } from '@themesberg/react-bootstrap';
 import { umowy } from '../../data/umowy'
 import { PageTrafficTable, PageUmowyTable } from "../../components/Tables";
+import { DataContext } from '../../APIController/data'
 
+const UmowyMainTable =  () => {
+  const { user, umowy } = useContext(DataContext)
 
-export default () => {
   return (
     <>
       <div className="d-xl-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
@@ -23,7 +25,8 @@ export default () => {
           </p>
         </div>
       </div>
-      <PageUmowyTable  umowy={umowy}/>
+      <PageUmowyTable umowy={umowy} user={user} />
     </>
   );
 };
+export default UmowyMainTable

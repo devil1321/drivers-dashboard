@@ -7,7 +7,7 @@ import { rozliczenia } from '../../data/rozliczenia'
 import { PageRozliczeniaNaMoimAucieTable,PageRozliczeniaNaSwoimAucieTable } from "../../components/Tables";
 
 
-export default () => {
+const RozliczeniaMainTable = () => {
   return (
     <>
       <div className="d-xl-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
@@ -28,3 +28,4 @@ export default () => {
     </>
   );
 };
+export default RozliczeniaMainTable
