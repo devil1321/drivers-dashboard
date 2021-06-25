@@ -1,12 +1,32 @@
 
-import React,{useContext} from "react";
+import React,{useContext,useEffect,useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { Breadcrumb } from '@themesberg/react-bootstrap';
 import {kierowcy} from '../../data/kierowcy'
 import { PageTrafficTable, PageKierowcyTableView } from "../../components/Tables";
 
-const KierowcyMainTable = () => {
+import { connect } from 'react-redux'
+import { userActions } from '../../APIController/actions/userActions'
+import { umowyActions } from '../../APIController/actions/umowyActions'
+import { fakturyActions } from '../../APIController/actions/fakturyActions'
+import { rozliczeniaActions } from '../../APIController/actions/rozliczeniaActions'
+
+
+const KierowcyMainTable = (props) => {
+
+  const { user, users, loggedUser } = props.users
+  const { umowy } = props.umowy
+  const { setUser, setUsers, setUmowy, showAllUsers } = props
+  const [isSet, setIsSet] = useState(false)
+  useEffect(()=>{ 
+    if(!isSet){
+      setUser()
+      setUsers()
+      setUmowy()
+      setIsSet(true)
+    }
+  },[isSet])
   return (
     <>
       <div className="d-xl-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
@@ -22,9 +42,15 @@ const KierowcyMainTable = () => {
           </p>
         </div>
       </div>
-        <PageKierowcyTableView/>
+        <PageKierowcyTableView {...props}/>
     </>
   );
 };
 
-export default KierowcyMainTable
+const mapStateToProps = state => ({
+  ...state
+})
+const actions = Object.assign({}, umowyActions,fakturyActions,userActions,rozliczeniaActions)
+
+
+export default connect(mapStateToProps,actions)(KierowcyMainTable)

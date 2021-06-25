@@ -1,4 +1,4 @@
-import { SET_FAKTURY,SET_ALL_USER_FAKTURY, ADD_FAKTURA } from '../../APIController/actions/types'
+import { SET_FAKTURY,SET_ALL_USER_FAKTURY, ADD_FAKTURA,DELETE_FAKTURA } from '../../APIController/actions/types'
 import axios from 'axios'
 
 const setFaktury = () => dispatch =>{
@@ -35,10 +35,20 @@ const addFaktura = (faktura) => dispatch =>{
     dispatch({
         type:ADD_FAKTURA,
     })
-}
-
+}  
+const fakturaDelete = (filename) => dispatch =>{
+    axios.delete('http://localhost:5000/faktury/faktura/delete/' + filename)
+      .then(res=>{
+          window.location.reload()
+          dispatch({
+                type:DELETE_FAKTURA,
+            })
+      })
+      .catch(err => console.log(err))
+  }
 export const fakturyActions = {
     setFaktury,
     setAllUserFaktury,
-    addFaktura
+    addFaktura,
+    fakturaDelete
 }

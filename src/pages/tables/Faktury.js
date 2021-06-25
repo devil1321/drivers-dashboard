@@ -1,4 +1,4 @@
-import React,{useContext} from "react";
+import React,{useContext,useEffect,useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { Breadcrumb } from '@themesberg/react-bootstrap';
@@ -7,9 +7,25 @@ import { PageFakturyTable, RankingTable } from "../../components/Tables";
 import { DataContext } from '../../APIController/data'
 
 
+import { connect } from 'react-redux'
+import { userActions } from '../../APIController/actions/userActions'
+import { umowyActions } from '../../APIController/actions/umowyActions'
+import { fakturyActions } from '../../APIController/actions/fakturyActions'
+import { rozliczeniaActions } from '../../APIController/actions/rozliczeniaActions'
 
-const FakturyMainTable = () => {
-  const { user, faktury } = useContext(DataContext)
+
+const FakturyMainTable = (props) => {
+
+  const { setUser, setUsers, setFaktury } = props
+  const [isSet, setIsSet] = useState(false)
+  useEffect(()=>{ 
+    if(!isSet){
+      setUser()
+      setUsers()
+      setFaktury()
+      setIsSet(true)
+    }
+  },[isSet])
 
   return (
     <>
@@ -27,8 +43,16 @@ const FakturyMainTable = () => {
         </div>
       </div>
 
-      <PageFakturyTable faktury={faktury} user={user} />
+      <PageFakturyTable {...props} />
     </>
   );
+  
+
 };
-export default FakturyMainTable
+
+const mapStateToProps = state => ({
+  ...state
+})
+const actions = Object.assign({}, umowyActions,fakturyActions,userActions,rozliczeniaActions)
+
+export default connect(mapStateToProps,actions)(FakturyMainTable)

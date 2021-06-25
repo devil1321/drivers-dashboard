@@ -1,4 +1,4 @@
-import { SET_FAKTURY, SET_ALL_USER_FAKTURY, ADD_FAKTURA } from '../actions/types'
+import { SET_FAKTURY, SET_ALL_USER_FAKTURY, ADD_FAKTURA,DELETE_FAKTURA } from '../actions/types'
 
 
 const initData = {
@@ -18,6 +18,10 @@ export default (state = initData,action) =>{
                 faktury:action.payload
             }
         case ADD_FAKTURA:
+            return {
+               ...state
+            }
+        case DELETE_FAKTURA:
             return {
                ...state
             }

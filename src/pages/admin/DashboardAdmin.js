@@ -3,12 +3,8 @@ import React,{useState,useContext,useEffect} from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCashRegister, faChartLine, faCloudUploadAlt, faPlus, faRocket, faTasks, faUserShield } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Button, Dropdown, ButtonGroup } from '@themesberg/react-bootstrap';
-import { Nav, Tab } from '@themesberg/react-bootstrap';
-import { CounterWidget, CircleChartWidget, BarChartWidget, TeamMembersWidget, ProgressTrackWidget, RankingWidget, SalesValueWidget, SalesValueWidgetPhone, AcquisitionWidget } from "../../components/Widgets";
-import { PageRozliczeniaNaMoimAucieTable,PageRozliczeniaNaSwoimAucieTable,PageFakturyTable, PageVisitsTable,PageKierowcyTable } from "../../components/Tables";
-import { rozliczenia } from '../../data/rozliczenia'
-import { trafficShares, totalOrders } from "../../data/charts";
-import { kierowcy } from '../../data/kierowcy'
+import { CounterWidget,  SalesValueWidget, SalesValueWidgetPhone, AcquisitionWidget } from "../../components/Widgets";
+import { PageRozliczeniaNaMoimAucieTable,PageRozliczeniaNaSwoimAucieTable,PageFakturyTable, PageKierowcyTable } from "../../components/Tables";
 import { Form, InputGroup } from '@themesberg/react-bootstrap';
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { RozliczeniaNaMoimAucieForm, RozliczeniaNaSwoimAucieForm } from '../../components/Forms'
@@ -30,6 +26,8 @@ const DashboardAdmin = (props) => {
   const [isPojazdyShow,setIsPojazdyShow] = useState(false)
   const [isKierowcyPojazdyShow,setIsKierowcyPojazdyShow] = useState(false)
   const [isRozliczeniaShow,setIsRozliczeniaShow] = useState(false)
+
+
   const [isRozliczShow,setIsRozliczShow] = useState(false)
   const [isModyfikujShow,setIsModyfikujShow] = useState(false)
   const [isFakturyShow,setIsFakturyShow] = useState(false)
@@ -44,7 +42,7 @@ const DashboardAdmin = (props) => {
   const { umowy } = props.umowy
   const { rozliczenia } = props.rozliczenia
 
-  const { setFaktury, setRozliczenia, setUmowy, setUsers } = props
+  const { setFaktury, setRozliczenia, setUmowy, setUsers ,setUser } = props
   
 
   console.log(props)
@@ -80,6 +78,7 @@ const DashboardAdmin = (props) => {
     // setRozliczenia()
     setUmowy()
     setUsers()
+    setUser()
   },[])
 
   return (

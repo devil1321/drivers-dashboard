@@ -11,20 +11,31 @@ import axios from 'axios'
 
 import {DataContext} from '../../APIController/data'
 
-const MyProfile = () => {
-  const { loggedUser } = useContext(DataContext)
+
+import { connect } from 'react-redux'
+import { userActions } from '../../APIController/actions/userActions'
+import { umowyActions } from '../../APIController/actions/umowyActions'
+import { fakturyActions } from '../../APIController/actions/fakturyActions'
+import { rozliczeniaActions } from '../../APIController/actions/rozliczeniaActions'
 
 
+
+const MyProfile = (props) => {
+  const { setUser } = props
+
+  const [isSet,setIsSet] = useState(false)
 
   useEffect(()=>{
-    
-  },[loggedUser])
+    setUser()
+    setIsSet(true)
+  },[isSet])
+
   return (
     <>
     <Col>
       <Row className="py-3">
         <Col xs={12} xl={8}>
-          <GeneralInfoForm user={loggedUser}/>
+          <GeneralInfoForm {...props} />
         </Col>
 
         <Col xs={12} xl={4}>
@@ -45,4 +56,13 @@ const MyProfile = () => {
     </>
   );
 };
-export default MyProfile
+
+
+const mapStateToProps = state => ({
+  ...state
+})
+
+const actions = Object.assign({}, umowyActions,fakturyActions,userActions,rozliczeniaActions)
+
+
+export default connect(mapStateToProps,actions)(MyProfile)

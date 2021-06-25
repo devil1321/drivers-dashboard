@@ -1,4 +1,4 @@
-import { SET_USER,SET_USER_BY_ID,MODIFY_USER,REGISTER_USER,LOGIN_USER, SET_USERS, SET_LOGGED_USER, HANDLE_USER,SET_IS_ROZLICZ_SHOW, HANDLE_SHOW_USER, HANDLE_SHOW_ALL_USERS } from '../../APIController/actions/types'
+import { SET_USER,SET_USER_BY_ID,MODIFY_USER,MODIFY_PROFILE,REGISTER_USER,LOGIN_USER, SET_USERS, SET_LOGGED_USER, HANDLE_USER,SET_IS_ROZLICZ_SHOW, HANDLE_SHOW_USER, HANDLE_SHOW_ALL_USERS } from '../../APIController/actions/types'
 import axios from 'axios'
 import store from '../store'
 
@@ -74,6 +74,21 @@ const modifyUser = (id) => dispatch =>{
     })
 }
 
+const modifyProfile = (_id ,user) => dispatch => {
+    axios.post('http://localhost:5000/users/update/' + _id ,user)
+    .then(res => {
+      console.log('added')
+      localStorage.clear()
+      localStorage.setItem('User',JSON.stringify(res.data))
+      dispatch({
+          type:MODIFY_PROFILE,
+          payload:res.data
+      })
+      window.location.reload()
+    })
+    .catch(err => {if(err) throw err})
+}
+
 const handleUser = (id) => dispatch =>{
     axios.get('http://localhost:5000/users/user/' + id)
     .then(res => {
@@ -101,7 +116,7 @@ const showAllUsers = () => dispatch =>{
     .then(res => {
         dispatch({
             type:HANDLE_SHOW_ALL_USERS,
-            payload:JSON.parse(res.data)
+            payload:res.data
         })
     })
     .catch(err => {if(err) throw err})
@@ -114,6 +129,7 @@ export const userActions = {
     loginUser,
     registerUser,
     modifyUser,
+    modifyProfile,
     handleUser,
     showUser,
     showAllUsers

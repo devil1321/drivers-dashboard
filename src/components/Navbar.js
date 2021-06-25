@@ -14,11 +14,19 @@ import axios from 'axios'
 import {DataContext} from '../APIController/data'
 
 
-export default (props) => {
+import { connect } from 'react-redux'
+import { userActions } from '../APIController/actions/userActions'
+import { umowyActions } from '../APIController/actions/umowyActions'
+import { fakturyActions } from '../APIController/actions/fakturyActions'
+import { rozliczeniaActions } from '../APIController/actions/rozliczeniaActions'
+
+
+
+const NavbarMenu = (props) => {
   const [notifications, setNotifications] = useState(NOTIFICATIONS_DATA);
   const areNotificationsRead = notifications.reduce((acc, notif) => acc && notif.read, true);
-  const {user, setUser } = useContext(DataContext)
-  const {imie,nazwisko} = user
+  const { user } = props.users
+  const {imie, nazwisko} = user
   useEffect(()=>{
   },[user])
 
@@ -132,3 +140,12 @@ export default (props) => {
     </Navbar>
   );
 };
+
+const mapStateToProps = state => ({
+  ...state
+})
+
+const actions = Object.assign({}, umowyActions,fakturyActions,userActions,rozliczeniaActions)
+
+
+export default connect(mapStateToProps,actions)(NavbarMenu)

@@ -26,7 +26,6 @@ const DashboardOverview = (props) => {
   const [isDodajUmoweShow,setIsDodajUmoweShow] = useState(false)
   const [isSet,setIsSet] = useState(false)
   const { user } = props.users
-  const { faktury } = props.faktury
   const { umowy } = props.umowy
   const { rozliczenia } = props.rozliczenia
 
@@ -44,20 +43,24 @@ const DashboardOverview = (props) => {
 
 
   const handleSubmitFaktura = (e) =>{
+    if(user._id){
       const form = document.querySelector('#formFaktura');
       let data = new FormData(form);
       data.append('userId',user._id)
       data.append('imie',user.imie)
       data.append('nazwisko',user.nazwisko)
       addFaktura(data)
+    }
   }
   
   const handleSubmitUmowa = (e) =>{
+    if(user._id){
       const form = document.querySelector('#formUmowa');
       let data = new FormData(form);
       data.append('userId',user._id)
       e.preventDefault();
       addUmowa(data)
+    }
   }
 
     return (
@@ -176,7 +179,7 @@ const DashboardOverview = (props) => {
                       </Col>
                     </Form.Group>
                   </Form>
-                <PageFakturyTable faktury={faktury} user={user}/>
+                <PageFakturyTable {...props} />
                 {isDodajFaktureShow && 
                 <Form id="formFaktura" className="mt-4" onSubmit={(e)=>{handleSubmitFaktura(e)}} enctype="multipart/form-data" encType="multipart/form-data">
                   <h2 className="text-center">Dodaj Fakture</h2>

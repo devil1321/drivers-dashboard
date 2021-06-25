@@ -8,11 +8,12 @@ import { Col, Row, Card, Form, Button, InputGroup } from '@themesberg/react-boot
 import {DataContext} from '../APIController/data'
 import axios from 'axios'
 
-export const GeneralInfoForm = () => {
+export const GeneralInfoForm = (props) => {
   const [birthday, setBirthday] = useState("");
-  const {user, setUser } = useContext(DataContext)
-  
-  const {_id, login,email,imie,nazwisko,dataUrodzin,plec,pesel,telefon,nrDowodu,auto,wojewodztwo,adres,nrDomu,miasto,zip,pojazd,nrRej} = user
+
+  const [user,setUser] = useState(props.users.loggedUser)
+  const { modifyProfile } = props
+  const {_id, login,email,imie,nazwisko,dataUrodzin,plec,pesel,telefon,nrDowodu,auto,wojewodztwo,adres,nrDomu,miasto,zip,pojazd,nrRej} = props.users.loggedUser
   
 
   const handleChange = (e) =>{
@@ -21,20 +22,15 @@ export const GeneralInfoForm = () => {
       [e.target.name]:e.target.value
     }))
   }
+  
   const handleSubmit = (e) =>{
     e.preventDefault()
-    axios.post('http://localhost:5000/users/update/' + _id ,user)
-      .then(res => {
-        console.log('added')
-        localStorage.clear()
-        localStorage.setItem('User',JSON.stringify(res.data))
-        setUser(res.data)
-        window.location.reload()
-      })
-      .catch(err => {if(err) throw err})
+    modifyProfile(_id,user)
   }
+
   useEffect(()=>{
-    console.log(user)
+    console.log(props)
+    console.log('user',user)
   },[user])
   return (
     <Card border="light" className="bg-white shadow-sm mb-4">
@@ -80,7 +76,7 @@ export const GeneralInfoForm = () => {
                         name="dataUrodzin"
                         type="date"
                         value={dataUrodzin}
-                        placeholder="mm/dd/yyyy"
+                        placeholder={"mm/dd/yyyy"}
                         onChange={(e)=>{handleChange(e)}} />
                     </InputGroup>
                

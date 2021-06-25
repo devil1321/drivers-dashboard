@@ -8,10 +8,10 @@ import { DataContext } from '../APIController/data'
 import { Form } from '@themesberg/react-bootstrap';
 
 import { connect } from 'react-redux'
-import { userActions } from '../../APIController/actions/userActions'
-import { umowyActions } from '../../APIController/actions/umowyActions'
-import { fakturyActions } from '../../APIController/actions/fakturyActions'
-import { rozliczeniaActions } from '../../APIController/actions/rozliczeniaActions'
+import { userActions } from '../APIController/actions/userActions'
+import { umowyActions } from '../APIController/actions/umowyActions'
+import { fakturyActions } from '../APIController/actions/fakturyActions'
+import { rozliczeniaActions } from '../APIController/actions/rozliczeniaActions'
 
 const ValueChange = ({ value, suffix }) => {
   const valueIcon = value < 0 ? faAngleDown : faAngleUp;
@@ -94,20 +94,18 @@ export const PageUmowyTable = (props) =>{
 };
 
 export const PageFakturyTable = (props) => {
-  const { faktury, user } = props
-  const loggedUserId = user._id
-  const isAdmin = user.isAdmin
+  const { user, loggedUser } = props.users
+  const { faktury } = props.faktury
+  const loggedUserId = loggedUser._id
+  const isAdmin = loggedUser.isAdmin
+
   const TableRow = (props) =>  {
       const index  = props.index 
       const { filename } = props.faktura
       const { _id,kwota,imie,nazwisko,formaPlatnosci,data,nip } = props.faktura.metadata
-      console.log(props.faktura)
+      const { deleteFaktura } = props
 
-    const handleDelete = (filename) =>{
-      axios.delete('http://localhost:5000/faktury/faktura/delete/' + filename)
-        .then(res=>window.location.reload())
-        .catch(err => console.log(err))
-    }
+  
 
     return (
       <tr>
@@ -122,7 +120,7 @@ export const PageFakturyTable = (props) => {
         <td>{nip}</td>
         <td>{formaPlatnosci}</td>
         <td><a href={`http://localhost:5000/faktury/faktura/${filename}`}><Button>Zobacz Fakturę</Button></a></td>
-        <td><Button onClick={()=>handleDelete(filename)}>Usun Fakturę</Button></td>
+        <td><Button onClick={()=>deleteFaktura(filename)}>Usun Fakturę</Button></td>
       </tr>
     );
   };
@@ -153,7 +151,7 @@ export const PageFakturyTable = (props) => {
             </tr>
           </thead>
           <tbody>
-            {faktury.map((faktura,index) => <TableRow key={faktura._id} faktura={faktura} user={user} index={index+1}/>)}
+            {faktury.map((faktura,index) => <TableRow key={faktura._id} faktura={faktura} user={user} index={index+1} {...props}/>)}
           </tbody>
         </Table>
       </Card.Body>
@@ -244,8 +242,12 @@ return (
   )
 };
 
-const PageKierowcyTableView = (props) =>{
-  const {users,user,umowy, loggedUser ,handleShowAllUsers} = useContext(DataContext)
+export const PageKierowcyTableView = (props) =>{
+
+  const { user, users, loggedUser } = props.users
+  const { umowy } = props.umowy
+  const { showAllUsers } = props
+
 
   const TableRow = (props) => {
     const { _id, index, imie, nazwisko, email,  auto, doWyplaty, isActive } = props;
@@ -297,7 +299,7 @@ return (
             <h5>Kierowcy</h5>
           </Col>
           <Col className="text-end">
-            <Button variant="secondary" size="sm" onClick={()=>handleShowAllUsers()}>See all</Button>
+            <Button variant="secondary" size="sm" onClick={()=>showAllUsers()}>See all</Button>
           </Col>
         </Row>
       </Card.Header>
@@ -322,6 +324,7 @@ return (
     </Card>
   )
 };
+
 
 export const PageRozliczeniaNaMoimAucieTable = (props) => {
   const { rozliczenia } = props

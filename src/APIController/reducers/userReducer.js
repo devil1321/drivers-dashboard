@@ -1,4 +1,4 @@
-import { SET_USER, SET_USER_BY_ID, SET_USERS,REGISTER_USER,LOGIN_USER, MODIFY_USER, HANDLE_USER, HANDLE_SHOW_USER, HANDLE_SHOW_ALL_USERS } from '../actions/types'
+import { SET_USER, SET_USER_BY_ID, SET_USERS,REGISTER_USER,LOGIN_USER, MODIFY_USER,MODIFY_PROFILE, HANDLE_USER, HANDLE_SHOW_USER, HANDLE_SHOW_ALL_USERS } from '../actions/types'
 import axios from 'axios'
 const initData = {
     user:{},
@@ -11,7 +11,8 @@ export default (state = initData,action)=>{
             case SET_USER: 
                 return{
                     ...state,
-                    user:action.payload
+                    user:action.payload,
+                    loggedUser:action.payload
                 }
             case SET_USER_BY_ID: 
                 return{
@@ -32,6 +33,12 @@ export default (state = initData,action)=>{
                 return {
                     ...state,
                     user:action.payload
+                }
+            case MODIFY_PROFILE:
+                return {
+                    ...state,
+                    user:action.payload,
+                    loggedUser:action.payload
                 }
             case SET_USERS: 
                 return{
