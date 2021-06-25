@@ -28,8 +28,10 @@ const ValueChange = ({ value, suffix }) => {
 };
 
 export const PageUmowyTable = (props) =>{
-  const { umowy, user } = props
-  const loggedUserId = user._id
+  const { user } = props.users
+  const { umowy } = props.umowy
+  const { loggedUser } = props.users
+  const loggedUserId = loggedUser._id
   const isAdmin = user.isAdmin
   if(umowy.length > 0 && !isAdmin){
     var documents = umowy.filter(faktura => faktura.metadata.userId === loggedUserId)

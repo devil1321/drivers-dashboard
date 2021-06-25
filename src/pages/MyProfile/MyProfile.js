@@ -21,7 +21,7 @@ import { rozliczeniaActions } from '../../APIController/actions/rozliczeniaActio
 
 
 const MyProfile = (props) => {
-  const { setUser } = props
+  const { setUser,handleChangeUser } = props
 
   const [isSet,setIsSet] = useState(false)
 

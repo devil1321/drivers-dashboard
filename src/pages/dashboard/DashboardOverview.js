@@ -247,7 +247,7 @@ const DashboardOverview = (props) => {
               </Tab.Pane>
 
               <Tab.Pane eventKey="umowy" className="py-4">
-                <PageUmowyTable umowy={umowy} user={user} />
+                <PageUmowyTable {...props} />
                 {isDodajUmoweShow && 
                 <Form id="formUmowa" onSubmit={(e)=>{handleSubmitUmowa(e)}} className="mt-4">
                 <h2 className="text-center">Dodaj Umowe</h2>

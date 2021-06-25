@@ -1,4 +1,4 @@
-import { SET_USER,SET_USER_BY_ID,MODIFY_USER,MODIFY_PROFILE,REGISTER_USER,LOGIN_USER, SET_USERS, SET_LOGGED_USER, HANDLE_USER,SET_IS_ROZLICZ_SHOW, HANDLE_SHOW_USER, HANDLE_SHOW_ALL_USERS } from '../../APIController/actions/types'
+import { SET_USER,SET_USER_BY_ID,MODIFY_USER,MODIFY_PROFILE,HANDLE_CHANGE_USER,REGISTER_USER,LOGIN_USER, SET_USERS, SET_LOGGED_USER, HANDLE_USER,SET_IS_ROZLICZ_SHOW, HANDLE_SHOW_USER, HANDLE_SHOW_ALL_USERS } from '../../APIController/actions/types'
 import axios from 'axios'
 import store from '../store'
 
@@ -122,6 +122,16 @@ const showAllUsers = () => dispatch =>{
     .catch(err => {if(err) throw err})
 }
 
+const handleChangeUser = (e) => dispatch =>{
+    const oldUser = store.getState().users.loggedUser; 
+    const newVal = oldUser[e.target.name] = e.target.value
+    let newUser = {...oldUser,newVal}
+    dispatch({
+        type:HANDLE_CHANGE_USER,
+        payload:newUser
+    })
+}
+
 export const userActions = {
     setUser,
     setUserById,
@@ -131,6 +141,7 @@ export const userActions = {
     modifyUser,
     modifyProfile,
     handleUser,
+    handleChangeUser,
     showUser,
     showAllUsers
 }

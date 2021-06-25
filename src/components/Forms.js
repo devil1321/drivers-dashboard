@@ -10,28 +10,16 @@ import axios from 'axios'
 
 export const GeneralInfoForm = (props) => {
   const [birthday, setBirthday] = useState("");
-
-  const [user,setUser] = useState(props.users.loggedUser)
-  const { modifyProfile } = props
-  const {_id, login,email,imie,nazwisko,dataUrodzin,plec,pesel,telefon,nrDowodu,auto,wojewodztwo,adres,nrDomu,miasto,zip,pojazd,nrRej} = props.users.loggedUser
   
+  const { modifyProfile, handleChangeUser } = props
+  const {_id, login,email,imie,nazwisko,dataUrodzin,plec,pesel,telefon,nrDowodu,auto,wojewodztwo,adres,nrDomu,miasto,zip,pojazd,nrRej} = props.users.loggedUser
 
-  const handleChange = (e) =>{
-    setUser(prevState=>({
-      ...prevState,
-      [e.target.name]:e.target.value
-    }))
-  }
   
   const handleSubmit = (e) =>{
     e.preventDefault()
-    modifyProfile(_id,user)
+    modifyProfile(_id,props.users.loggedUser)
   }
 
-  useEffect(()=>{
-    console.log(props)
-    console.log('user',user)
-  },[user])
   return (
     <Card border="light" className="bg-white shadow-sm mb-4">
       <Card.Body>
@@ -41,13 +29,13 @@ export const GeneralInfoForm = (props) => {
             <Col md={6} className="mb-3">
               <Form.Group id="login">
                 <Form.Label>Login</Form.Label>
-                <Form.Control onChange={(e)=>{handleChange(e)}}  type="text" placeholder="Podaj Login" name="login" value={login}/>
+                <Form.Control onChange={(e)=>{handleChangeUser(e)}}  type="text" placeholder="Podaj Login" name="login" value={login}/>
               </Form.Group>
             </Col>
             <Col md={6} className="mb-3">
               <Form.Group id="email">
                 <Form.Label>Email</Form.Label>
-                <Form.Control onChange={(e)=>{handleChange(e)}}  type="text" placeholder="Podaj Email" name="email" value={email} />
+                <Form.Control onChange={(e)=>{handleChangeUser(e)}}  type="text" placeholder="Podaj Email" name="email" value={email} />
               </Form.Group>
             </Col>
           </Row>
@@ -55,13 +43,13 @@ export const GeneralInfoForm = (props) => {
             <Col md={6} className="mb-3">
               <Form.Group id="imie">
                 <Form.Label>Imię</Form.Label>
-                <Form.Control onChange={(e)=>{handleChange(e)}}  type="text" placeholder="Podaj Imię" name="imie" value={imie} />
+                <Form.Control onChange={(e)=>{handleChangeUser(e)}}  type="text" placeholder="Podaj Imię" name="imie" value={imie} />
               </Form.Group>
             </Col>
             <Col md={6} className="mb-3">
               <Form.Group id="nazwisko">
                 <Form.Label>Nazwisko</Form.Label>
-                <Form.Control onChange={(e)=>{handleChange(e)}}  type="text" placeholder="Podaj Nazwisko" name="nazwisko" value={nazwisko} />
+                <Form.Control onChange={(e)=>{handleChangeUser(e)}}  type="text" placeholder="Podaj Nazwisko" name="nazwisko" value={nazwisko} />
               </Form.Group>
             </Col>
           </Row>
@@ -77,7 +65,7 @@ export const GeneralInfoForm = (props) => {
                         type="date"
                         value={dataUrodzin}
                         placeholder={"mm/dd/yyyy"}
-                        onChange={(e)=>{handleChange(e)}} />
+                        onChange={(e)=>{handleChangeUser(e)}} />
                     </InputGroup>
                
               </Form.Group>
@@ -85,7 +73,7 @@ export const GeneralInfoForm = (props) => {
             <Col md={6} className="mb-3">
               <Form.Group id="plec">
                 <Form.Label>Płeć</Form.Label>
-                <Form.Select onChange={(e)=>{handleChange(e)}} defaultValue={plec} value={plec} name="plec">
+                <Form.Select onChange={(e)=>{handleChangeUser(e)}} defaultValue={plec} value={plec} name="plec">
                   <option value="mezczyzna">Mężczyzna</option>
                   <option value="kobieta">Kobieta</option>
                 </Form.Select>
@@ -96,13 +84,13 @@ export const GeneralInfoForm = (props) => {
             <Col md={6} className="mb-3">
               <Form.Group id="pesel">
                 <Form.Label>Pesel</Form.Label>
-                <Form.Control onChange={(e)=>{handleChange(e)}}  type="number" placeholder="Podaj Pesel" name="pesel" value={pesel} />
+                <Form.Control onChange={(e)=>{handleChangeUser(e)}}  type="number" placeholder="Podaj Pesel" name="pesel" value={pesel} />
               </Form.Group>
             </Col>
             <Col md={6} className="mb-3">
               <Form.Group id="telefon">
                 <Form.Label>Nr Dowodu</Form.Label>
-                <Form.Control onChange={(e)=>{handleChange(e)}}  type="text" placeholder="Podaj Nr Dowodu" name="nrDowodu" value={nrDowodu} />
+                <Form.Control onChange={(e)=>{handleChangeUser(e)}}  type="text" placeholder="Podaj Nr Dowodu" name="nrDowodu" value={nrDowodu} />
               </Form.Group>
             </Col>
           </Row>
@@ -110,13 +98,13 @@ export const GeneralInfoForm = (props) => {
             <Col md={6} className="mb-3">
               <Form.Group id="telefon">
                 <Form.Label>Telefon</Form.Label>
-                <Form.Control onChange={(e)=>{handleChange(e)}}  type="number" placeholder="+12-345 678 910" name="telefon" value={telefon} />
+                <Form.Control onChange={(e)=>{handleChangeUser(e)}}  type="number" placeholder="+12-345 678 910" name="telefon" value={telefon} />
               </Form.Group>
             </Col>
             <Col md={6} className="mb-3">
             <Form.Group id="auto">
                 <Form.Label>Auto</Form.Label>
-                <Form.Select onChange={(e)=>{handleChange(e)}} defaultValue={auto} value={auto} name="auto">
+                <Form.Select onChange={(e)=>{handleChangeUser(e)}} defaultValue={auto} value={auto} name="auto">
                   <option value={false}>Na Swoim</option>
                   <option value={true}>Na Moim</option>
                 </Form.Select>
@@ -127,13 +115,13 @@ export const GeneralInfoForm = (props) => {
             <Col md={6} className="mb-3">
               <Form.Group id="pojazd">
                 <Form.Label>Pojazd</Form.Label>
-                <Form.Control onChange={(e)=>{handleChange(e)}}  type="number" placeholder="Podaj Pojazd" name="pojazd" value={pojazd} />
+                <Form.Control onChange={(e)=>{handleChangeUser(e)}}  type="number" placeholder="Podaj Pojazd" name="pojazd" value={pojazd} />
               </Form.Group>
             </Col>
             <Col md={6} className="mb-3">
               <Form.Group id="nrRej">
                 <Form.Label>Nr.Rejestracji</Form.Label>
-                <Form.Control onChange={(e)=>{handleChange(e)}}  type="number" placeholder="Podaj Rejestracje" name="nrRej" value={nrRej} />
+                <Form.Control onChange={(e)=>{handleChangeUser(e)}}  type="number" placeholder="Podaj Rejestracje" name="nrRej" value={nrRej} />
               </Form.Group>
             </Col>
            
@@ -144,13 +132,13 @@ export const GeneralInfoForm = (props) => {
             <Col sm={9} className="mb-3">
               <Form.Group id="adres">
                 <Form.Label>Adres</Form.Label>
-                <Form.Control onChange={(e)=>{handleChange(e)}}  type="text" placeholder="Podaj Adres" name="adres" value={adres} />
+                <Form.Control onChange={(e)=>{handleChangeUser(e)}}  type="text" placeholder="Podaj Adres" name="adres" value={adres} />
               </Form.Group>
             </Col>
             <Col sm={3} className="mb-3">
               <Form.Group id="nr-domu">
                 <Form.Label>Nr Domu</Form.Label>
-                <Form.Control onChange={(e)=>{handleChange(e)}}  type="number" placeholder="No." name="nrDomu" value={nrDomu}/>
+                <Form.Control onChange={(e)=>{handleChangeUser(e)}}  type="number" placeholder="No." name="nrDomu" value={nrDomu}/>
               </Form.Group>
             </Col>
           </Row>
@@ -158,13 +146,13 @@ export const GeneralInfoForm = (props) => {
             <Col sm={4} className="mb-3">
               <Form.Group id="miasto">
                 <Form.Label>Miasto</Form.Label>
-                <Form.Control onChange={(e)=>{handleChange(e)}}  type="text" placeholder="Miasto" name="masto" value={miasto} />
+                <Form.Control onChange={(e)=>{handleChangeUser(e)}}  type="text" placeholder="Miasto" name="masto" value={miasto} />
               </Form.Group>
             </Col>
             <Col sm={4} className="mb-3">
               <Form.Group className="mb-2">
                 <Form.Label>Województwo</Form.Label>
-                <Form.Select onChange={(e)=>{handleChange(e)}} id="wojewodztwo" defaultValue={wojewodztwo} name="wojewodztwo">
+                <Form.Select onChange={(e)=>{handleChangeUser(e)}} id="wojewodztwo" defaultValue={wojewodztwo} name="wojewodztwo">
                   <option value="dolnośląskie">Dolnośląskie</option>
                   <option value="kujawsko-pomorskie">Kujawsko-pomorskie</option>
                   <option value="lubelskie">Lubelskie</option>
@@ -187,7 +175,7 @@ export const GeneralInfoForm = (props) => {
             <Col sm={4}>
               <Form.Group id="zip">
                 <Form.Label>ZIP</Form.Label>
-                <Form.Control onChange={(e)=>{handleChange(e)}}  type="tel" placeholder="ZIP Miejscowość" name="zip" value={zip} />
+                <Form.Control onChange={(e)=>{handleChangeUser(e)}}  type="tel" placeholder="ZIP Miejscowość" name="zip" value={zip} />
               </Form.Group>
             </Col>
           </Row>

@@ -1,5 +1,5 @@
 
-import React,{useContext} from "react";
+import React,{useContext,useEffect,useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { Breadcrumb } from '@themesberg/react-bootstrap';
@@ -7,8 +7,24 @@ import { umowy } from '../../data/umowy'
 import { PageTrafficTable, PageUmowyTable } from "../../components/Tables";
 import { DataContext } from '../../APIController/data'
 
-const UmowyMainTable =  () => {
-  const { user, umowy } = useContext(DataContext)
+import { connect } from 'react-redux'
+import { userActions } from '../../APIController/actions/userActions'
+import { umowyActions } from '../../APIController/actions/umowyActions'
+import { fakturyActions } from '../../APIController/actions/fakturyActions'
+import { rozliczeniaActions } from '../../APIController/actions/rozliczeniaActions'
+
+
+const UmowyMainTable =  (props) => {
+  const { setUser, setUsers, setUmowy } = props
+  const [isSet, setIsSet] = useState(false)
+  useEffect(()=>{ 
+    if(!isSet){
+      setUser()
+      setUsers()
+      setUmowy()
+      setIsSet(true)
+    }
+  },[isSet])
 
   return (
     <>
@@ -25,8 +41,15 @@ const UmowyMainTable =  () => {
           </p>
         </div>
       </div>
-      <PageUmowyTable umowy={umowy} user={user} />
+      <PageUmowyTable {...props}/>
     </>
   );
 };
-export default UmowyMainTable
+
+const mapStateToProps = state => ({
+  ...state
+})
+const actions = Object.assign({}, umowyActions,fakturyActions,userActions,rozliczeniaActions)
+
+
+export default connect(mapStateToProps,actions)(UmowyMainTable)
