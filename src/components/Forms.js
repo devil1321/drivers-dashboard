@@ -190,13 +190,10 @@ export const GeneralInfoForm = (props) => {
 
 export const RozliczeniaNaMoimAucieForm = (props) =>{
   const { selectedUser } = props.users
-  const { handleChangeRozliczenie, saveRozliczenie, setRozliczenie } = props
+  const { handleChangeRozliczenie, saveRozliczenie } = props
   const { uberAplikacja,uberGotowka, boltAplikacja,boltGotowka, freeNowAplikacja, freeNowGotowka, calyObrot, gotowkaRazem,napiwek,bonusy,potracenia,dodatek,premia,kwotaKoncowa_1,kwotaKoncowa_2, doWyplaty } = props.rozliczenia.rozliczenie;
   const {imie, nazwisko, email, nrRej } = props.users.selectedUser
 
-  useEffect(()=>{
-    setRozliczenie()
-  },[])
 
   return(
     <>
@@ -207,6 +204,18 @@ export const RozliczeniaNaMoimAucieForm = (props) =>{
           e.preventDefault()
           saveRozliczenie(selectedUser._id)
         }}>
+            <Col className="mb-3">
+              <Form.Group id="imie">
+                <Form.Label>Data</Form.Label>
+                <Form.Control  type="date" placeholder="Podaj Imię" name="data" value={imie} onChange={(e)=>handleChangeRozliczenie(e)} />
+              </Form.Group>
+            </Col>
+            <Col className="mb-3">
+              <Form.Group id="imie">
+                <Form.Label>Nr Faktury</Form.Label>
+                <Form.Control  type="text" placeholder="Podaj Imię" name="text" onChange={(e)=>handleChangeRozliczenie(e)} />
+              </Form.Group>
+            </Col>
             <Col className="mb-3">
               <Form.Group id="imie">
                 <Form.Label>Imię</Form.Label>
@@ -236,10 +245,10 @@ export const RozliczeniaNaMoimAucieForm = (props) =>{
                 <Form.Label>Uber</Form.Label>
                 <Row>
                   <Col lg={2}>
-                    <Form.Control  type="text" placeholder="Aplikacja" name="uber-aplikacja" value={uberAplikacja} onChange={(e)=>handleChangeRozliczenie(e)} />
+                    <Form.Control  type="text" placeholder="Aplikacja" name="uberAplikacja" value={uberAplikacja} onChange={(e)=>handleChangeRozliczenie(e)} />
                   </Col>
                   <Col lg={2}>
-                    <Form.Control  type="text" placeholder="Gotówka" name="uber-gotowka" value={uberGotowka} onChange={(e)=>handleChangeRozliczenie(e)} />
+                    <Form.Control  type="text" placeholder="Gotówka" name="uberGotowka" value={uberGotowka} onChange={(e)=>handleChangeRozliczenie(e)} />
                   </Col>
                 </Row>
               </Form.Group>
@@ -249,10 +258,10 @@ export const RozliczeniaNaMoimAucieForm = (props) =>{
                 <Form.Label>Bolt</Form.Label>
                 <Row>
                   <Col lg={2}>
-                    <Form.Control  type="text" placeholder="Aplikacja" name="bolt-aplikacja" value={boltAplikacja} onChange={(e)=>handleChangeRozliczenie(e)} />
+                    <Form.Control  type="text" placeholder="Aplikacja" name="boltAplikacja" value={boltAplikacja} onChange={(e)=>handleChangeRozliczenie(e)} />
                   </Col>
                   <Col lg={2}>
-                    <Form.Control  type="text" placeholder="Gotówka" name="bolt-gotowka" value={boltGotowka} onChange={(e)=>handleChangeRozliczenie(e)} />
+                    <Form.Control  type="text" placeholder="Gotówka" name="boltGotowka" value={boltGotowka} onChange={(e)=>handleChangeRozliczenie(e)} />
                   </Col>
                 </Row>
               </Form.Group>
@@ -262,10 +271,10 @@ export const RozliczeniaNaMoimAucieForm = (props) =>{
                 <Form.Label>FreeNow</Form.Label>
                 <Row>
                   <Col lg={2}>
-                    <Form.Control  type="text" placeholder="Aplikacja" name="freeNow-aplikacja" value={freeNowAplikacja} onChange={(e)=>handleChangeRozliczenie(e)} />
+                    <Form.Control  type="text" placeholder="Aplikacja" name="freeNowAplikacja" value={freeNowAplikacja} onChange={(e)=>handleChangeRozliczenie(e)} />
                   </Col>
                   <Col lg={2}>
-                    <Form.Control  type="text" placeholder="Gotówka" name="freeNow-gotowka" value={freeNowGotowka} onChange={(e)=>handleChangeRozliczenie(e)} />
+                    <Form.Control  type="text" placeholder="Gotówka" name="freeNowGotowka" value={freeNowGotowka} onChange={(e)=>handleChangeRozliczenie(e)} />
                   </Col>
                 </Row>
               </Form.Group>
@@ -273,13 +282,13 @@ export const RozliczeniaNaMoimAucieForm = (props) =>{
             <Col className="mb-3">
               <Form.Group id="cały-obrót">
                 <Form.Label>Cały Obrót</Form.Label>
-                <Form.Control  type="text" placeholder="Cały Obrót" name="caly-obrot" value={calyObrot} onChange={(e)=>handleChangeRozliczenie(e)} />
+                <Form.Control  type="text" placeholder="Cały Obrót" name="calyObrot" value={calyObrot} onChange={(e)=>handleChangeRozliczenie(e)} />
               </Form.Group>
             </Col>
             <Col className="mb-3">
               <Form.Group id="phone">
                 <Form.Label>Gotówka Razem</Form.Label>
-                <Form.Control  type="text" placeholder="Gotowka Razem" name="gotowka-razem" value={gotowkaRazem} onChange={(e)=>handleChangeRozliczenie(e)} />
+                <Form.Control  type="text" placeholder="Gotowka Razem" name="gotowkaRazem" value={gotowkaRazem} onChange={(e)=>handleChangeRozliczenie(e)} />
               </Form.Group>
             </Col>
             <Col className="mb-3">
@@ -317,10 +326,10 @@ export const RozliczeniaNaMoimAucieForm = (props) =>{
                 <Form.Label>Kwota Końcowa</Form.Label>
                 <Row>
                   <Col lg={2}>
-                    <Form.Control  type="text" placeholder="Kwota Końcowa 1"  name="kwota-koncowa-1" value={kwotaKoncowa_1} onChange={(e)=>handleChangeRozliczenie(e)} />
+                    <Form.Control  type="text" placeholder="Kwota Końcowa 1"  name="kwotaKoncowa_1" value={kwotaKoncowa_1} onChange={(e)=>handleChangeRozliczenie(e)} />
                   </Col>
                   <Col lg={2}>
-                    <Form.Control  type="text" placeholder="Kwota Końcowa 2"  name="kwota-koncowa-2" value={kwotaKoncowa_2} onChange={(e)=>handleChangeRozliczenie(e)} />
+                    <Form.Control  type="text" placeholder="Kwota Końcowa 2"  name="kwotaKoncowa_2" value={kwotaKoncowa_2} onChange={(e)=>handleChangeRozliczenie(e)} />
                   </Col>
                 </Row>
               </Form.Group>
@@ -328,7 +337,7 @@ export const RozliczeniaNaMoimAucieForm = (props) =>{
             <Col>
               <Form.Group id="do-wyplaty">
                 <Form.Label>Do Wypłaty</Form.Label>
-                <Form.Control  type="text" placeholder="Podaj Wypłate" value={doWyplaty} onChange={(e)=>handleChangeRozliczenie(e)} />
+                <Form.Control  type="text" placeholder="Podaj Wypłate" name="doWyplaty" value={doWyplaty} onChange={(e)=>handleChangeRozliczenie(e)} />
               </Form.Group>
             </Col>
             <div className="mt-3">
@@ -343,13 +352,11 @@ export const RozliczeniaNaMoimAucieForm = (props) =>{
 
 export const RozliczeniaNaSwoimAucieForm = (props) =>{
   const { selectedUser } = props.users
-  const { handleChangeRozliczenie,saveRozliczenie, setRozliczenie } = props
+  const { handleChangeRozliczenie,saveRozliczenie } = props
   const { uberAplikacja,uberGotowka, boltAplikacja,boltGotowka, freeNowAplikacja, freeNowGotowka, calyObrot, gotowkaRazem, dodatek, prowizjaBolt, rozliczenieZus, bonusy, podatek, zwrotFv, potracenia, napiwki, doWyplaty } = props.rozliczenia.rozliczenie;
   const {imie, nazwisko, email } = props.users.selectedUser
 
-  useEffect(()=>{
-    setRozliczenie()
-  },[])
+
 
   return(
     <>
@@ -360,6 +367,18 @@ export const RozliczeniaNaSwoimAucieForm = (props) =>{
           e.preventDefault()
           saveRozliczenie(selectedUser._id)
         }}>
+          <Col className="mb-3">
+            <Form.Group id="imie">
+              <Form.Label>Data</Form.Label>
+              <Form.Control  type="date" placeholder="Podaj Imię" name="data" value={imie} onChange={(e)=>handleChangeRozliczenie(e)} />
+            </Form.Group>
+          </Col>
+          <Col className="mb-3">
+              <Form.Group id="imie">
+                <Form.Label>Nr Faktury</Form.Label>
+                <Form.Control  type="text" placeholder="Podaj Imię" name="text"  onChange={(e)=>handleChangeRozliczenie(e)} />
+              </Form.Group>
+            </Col>
           <Col className="mb-3">
             <Form.Group id="imie">
               <Form.Label>Imię</Form.Label>
@@ -383,10 +402,10 @@ export const RozliczeniaNaSwoimAucieForm = (props) =>{
               <Form.Label>Uber</Form.Label>
               <Row>
                   <Col lg={2}>
-                    <Form.Control  type="text" placeholder="Aplikacja" name="uber-gotowka" value={uberAplikacja} onChange={(e)=>handleChangeRozliczenie(e)}  />
+                    <Form.Control  type="text" placeholder="Aplikacja" name="uberGotowka" value={uberAplikacja} onChange={(e)=>handleChangeRozliczenie(e)}  />
                   </Col>
                   <Col lg={2}>
-                    <Form.Control  type="text" placeholder="Gotówka" name="uber-aplikacja" value={uberGotowka} onChange={(e)=>handleChangeRozliczenie(e)} />
+                    <Form.Control  type="text" placeholder="Gotówka" name="uberAplikacja" value={uberGotowka} onChange={(e)=>handleChangeRozliczenie(e)} />
                   </Col>
                 </Row>
             </Form.Group>
@@ -396,10 +415,10 @@ export const RozliczeniaNaSwoimAucieForm = (props) =>{
               <Form.Label>Bolt Brutto</Form.Label>
               <Row>
                   <Col lg={2}>
-                    <Form.Control  type="text" placeholder="Aplikacja" name="bolt-aplikacja" value={boltAplikacja} onChange={(e)=>handleChangeRozliczenie(e)} />
+                    <Form.Control  type="text" placeholder="Aplikacja" name="boltAplikacja" value={boltAplikacja} onChange={(e)=>handleChangeRozliczenie(e)} />
                   </Col>
                   <Col lg={2}>
-                    <Form.Control  type="text" placeholder="Gotówka" name="bolt-gotowka" value={boltGotowka} onChange={(e)=>handleChangeRozliczenie(e)} />
+                    <Form.Control  type="text" placeholder="Gotówka" name="boltGotowka" value={boltGotowka} onChange={(e)=>handleChangeRozliczenie(e)} />
                   </Col>
                 </Row>
             </Form.Group>
@@ -409,10 +428,10 @@ export const RozliczeniaNaSwoimAucieForm = (props) =>{
               <Form.Label>FreeNow</Form.Label>
               <Row>
                   <Col lg={2}>
-                    <Form.Control  type="text" placeholder="Aplikacja" name="freeNow-aplikacja" value={freeNowAplikacja} onChange={(e)=>handleChangeRozliczenie(e)} />
+                    <Form.Control  type="text" placeholder="Aplikacja" name="freeNowAplikacja" value={freeNowAplikacja} onChange={(e)=>handleChangeRozliczenie(e)} />
                   </Col>
                   <Col lg={2}>
-                    <Form.Control  type="text" placeholder="Gotówka" name="freeNow-gotowka" value={freeNowGotowka} onChange={(e)=>handleChangeRozliczenie(e)} />
+                    <Form.Control  type="text" placeholder="Gotówka" name="freeNowGotowka" value={freeNowGotowka} onChange={(e)=>handleChangeRozliczenie(e)} />
                   </Col>
                 </Row>
             </Form.Group>
@@ -420,13 +439,13 @@ export const RozliczeniaNaSwoimAucieForm = (props) =>{
           <Col className="mb-3">
             <Form.Group id="caly-obrot">
               <Form.Label>Cały Obrót</Form.Label>
-              <Form.Control  type="text" placeholder="Cały Obrót" name="caly-obrot" value={calyObrot} onChange={(e)=>handleChangeRozliczenie(e)} />
+              <Form.Control  type="text" placeholder="Cały Obrót" name="calyObrot" value={calyObrot} onChange={(e)=>handleChangeRozliczenie(e)} />
             </Form.Group>
           </Col>
           <Col className="mb-3">
             <Form.Group id="gotowka-razem">
               <Form.Label>Gotówka Razem</Form.Label>
-              <Form.Control  type="text" placeholder="Gotowka Razem" name="gotowka-razem" value={gotowkaRazem} onChange={(e)=>handleChangeRozliczenie(e)} />
+              <Form.Control  type="text" placeholder="Gotowka Razem" name="gotowkaRazem" value={gotowkaRazem} onChange={(e)=>handleChangeRozliczenie(e)} />
             </Form.Group>
           </Col>
           <Col className="mb-3">
@@ -438,7 +457,7 @@ export const RozliczeniaNaSwoimAucieForm = (props) =>{
           <Col className="mb-3">
             <Form.Group id="nrdomu">
               <Form.Label>Prowizja Bolt</Form.Label>
-              <Form.Control  type="text" placeholder="Podaj Prowizje Bolt" name="prowizja-bolt" value={prowizjaBolt} onChange={(e)=>handleChangeRozliczenie(e)}  />
+              <Form.Control  type="text" placeholder="Podaj Prowizje Bolt" name="prowizjaBolt" value={prowizjaBolt} onChange={(e)=>handleChangeRozliczenie(e)}  />
             </Form.Group>
           </Col>
           <Col className="mb-3">
@@ -450,7 +469,7 @@ export const RozliczeniaNaSwoimAucieForm = (props) =>{
           <Col className="mb-3">
           <Form.Group id="miasto">
               <Form.Label>Rozliczenie + Zus</Form.Label>
-              <Form.Control  type="text" placeholder="Miasto" name="miasto" value={rozliczenieZus} onChange={(e)=>handleChangeRozliczenie(e)} />
+              <Form.Control  type="text" placeholder="Miasto" name="zus" value={rozliczenieZus} onChange={(e)=>handleChangeRozliczenie(e)} />
             </Form.Group>
           </Col>
           <Col>
@@ -468,7 +487,7 @@ export const RozliczeniaNaSwoimAucieForm = (props) =>{
           <Col>
             <Form.Group id="zwrot-fv">
               <Form.Label>Zwrot FV</Form.Label>
-              <Form.Control  type="text" placeholder="Zwrot Fv" name='zwrot-fv' value={zwrotFv} onChange={(e)=>handleChangeRozliczenie(e)} />
+              <Form.Control  type="text" placeholder="Zwrot Fv" name='zwrotFv' value={zwrotFv} onChange={(e)=>handleChangeRozliczenie(e)} />
             </Form.Group>
           </Col>
           <Col>
@@ -486,7 +505,7 @@ export const RozliczeniaNaSwoimAucieForm = (props) =>{
           <Col>
             <Form.Group id="zip">
               <Form.Label>Do Wypłaty</Form.Label>
-              <Form.Control  type="text" placeholder="Do Wypłaty" name='do-wyplaty' value={doWyplaty} onChange={(e)=>handleChangeRozliczenie(e)} />
+              <Form.Control  type="text" placeholder="Do Wypłaty" name='doWyplaty' value={doWyplaty} onChange={(e)=>handleChangeRozliczenie(e)} />
             </Form.Group>
           </Col>
           <div className="mt-3">

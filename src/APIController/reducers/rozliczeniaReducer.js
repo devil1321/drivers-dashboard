@@ -1,4 +1,4 @@
-import { SET_IS_ROZLICZ_SHOW, SET_ROZLICZENIA,SET_ROZLICZENIE,SAVE_ROZLICZENIE,HANDLE_CHANGE_ROZLICZENIE,SET_ALL_USER_ROZLICZENIA, HANDLE_MODIFY_ROZLICZENIA } from '../actions/types'
+import { SET_IS_ROZLICZ_SHOW,MODYFIKUJ_ROZLICZENIE, SET_ROZLICZENIA,SET_ROZLICZENIE,SAVE_ROZLICZENIE,HANDLE_CHANGE_ROZLICZENIE,SET_ALL_USER_ROZLICZENIA, HANDLE_MODIFY_ROZLICZENIA } from '../actions/types'
 
 const initData = {
     rozliczenia:[],
@@ -24,6 +24,11 @@ export default (state = initData,action) =>{
                 ...state,
                 rozliczenia:rozliczenia
              
+            }
+        case MODYFIKUJ_ROZLICZENIE:
+            return{
+                ...state,
+                rozliczenie:action.payload
             }
         case SET_ROZLICZENIE:
             return {

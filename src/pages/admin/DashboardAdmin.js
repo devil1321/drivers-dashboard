@@ -42,7 +42,7 @@ const DashboardAdmin = (props) => {
   const { umowy } = props.umowy
   const { rozliczenia } = props.rozliczenia
   
-  const { setFaktury,setSelectedUser, setRozliczenia, setUmowy, setUsers ,setUser, handleActiveUser, handleDeleteUser, filterUsersById } = props
+  const { setFaktury, setSelectedUser, setRozliczenia,setRozliczenie, setUmowy, setUsers ,setUser, handleActiveUser, handleDeleteUser, filterUsersById, setAllUserRozliczenia } = props
   const [usersOptions,setUserOptions] = useState(users)
   const [isSet,setIsSet] = useState(false)
   
@@ -51,8 +51,7 @@ const DashboardAdmin = (props) => {
 
  
   useEffect(()=>{
-    setFaktury() 
-    setRozliczenia()
+    setRozliczenie()
     setUmowy()
     setUsers()
     setUser()
@@ -60,8 +59,11 @@ const DashboardAdmin = (props) => {
       setUserOptions(users.filter(user => user._id !== loggedUser._id))
       setIsSet(true)
       setSelectedUser(users[0])
+      setRozliczenia()
+      setFaktury() 
     }
-  },[isRozliczShow])
+    
+  },[isRozliczShow,usersOptions,selectedUser])
 
   return (
     <>
@@ -229,14 +231,18 @@ const DashboardAdmin = (props) => {
                 <Form className="mt-4">
                   <Form.Group className="mb-2">
                       <Form.Label>Wybierz Kierowcę</Form.Label>
-                      <Form.Select id="state" defaultValue="0" onChange={(e)=>{filterUsersById(e.target.value)}}>
+                      <Form.Select id="state" defaultValue="0" onChange={(e)=>{
+                          filterUsersById(e.target.value)
+                          setAllUserRozliczenia(e.target.value)
+                        }}>
                       {usersOptions.map(user =>{
                             return <option value={user._id}>{user.imie} {user.nazwisko}</option>
                           })}
                       </Form.Select>
                     </Form.Group>
-                    <Form.Group className="mb-3">
-                    <Form.Label>Wybierz Przedzial Datowy</Form.Label>
+                    {rozliczenia.length > 0 
+                    ?<Form.Group className="mb-3">
+                     <Form.Label>Wybierz Przedzial Datowy</Form.Label>
                       <Col className="d-flex" lg={4}>
                         <InputGroup>
                           <InputGroup.Text><FontAwesomeIcon icon={faSearch} /></InputGroup.Text>
@@ -248,10 +254,16 @@ const DashboardAdmin = (props) => {
                         </InputGroup>
                       </Col>
                     </Form.Group>
+                    : null}
                   </Form>
-                  {selectedUser.auto 
-                    ? <PageRozliczeniaNaMoimAucieTable {...props}/>
-                    : <PageRozliczeniaNaSwoimAucieTable {...props}/>
+                  {rozliczenia.length > 0 
+                  ? <React.Fragment>
+                    {selectedUser.auto 
+                      ? <PageRozliczeniaNaMoimAucieTable {...props}/>
+                      : <PageRozliczeniaNaSwoimAucieTable {...props}/>
+                    }
+                    </React.Fragment>
+                  : null
                   }
                   
 

@@ -327,9 +327,10 @@ return (
 
 export const PageRozliczeniaNaMoimAucieTable = (props) => {
   const { rozliczenia } = props.rozliczenia
-  
+  const { setRozliczenia } = props
   const TableRow = (props) => {
-    const { imie, nazwisko, nrRej, email, uberAplikacja, uberGotowka, boltAplikacja, boltGotowka, freeNowAplikacja, freeNowGotowka, calyObrot, gotowkaRazem, napiwek, bonusy, potracenia, dodatek, premia, kwotaKoncowa, doWyplaty } = props;
+    const { imie, nazwisko, nrRej, email, uberAplikacja, uberGotowka, boltAplikacja, boltGotowka, freeNowAplikacja, freeNowGotowka, calyObrot, gotowkaRazem, napiwek, bonusy, potracenia, dodatek, premia, kwotaKoncowa, doWyplaty } = props.rozliczenie;
+    const { modyfikujRozliczenie } = props
     return (
       <tr>
         <td>
@@ -352,7 +353,7 @@ export const PageRozliczeniaNaMoimAucieTable = (props) => {
         <td>{premia}</td>
         <td>{kwotaKoncowa}</td>
         <td>{doWyplaty}</td>
-        <td><Button>Modyfikuj</Button></td>
+        <td onClick={(e)=>{modyfikujRozliczenie(props.rozliczenie)}}><Button>Modyfikuj</Button></td>
       </tr>
     );
   };
@@ -365,7 +366,7 @@ export const PageRozliczeniaNaMoimAucieTable = (props) => {
             <h5>Rozliczenia Na Moim Aucie</h5>
           </Col>
           <Col className="text-end">
-            <Button variant="secondary" size="sm">See all</Button>
+            <Button onClick={(e)=>{setRozliczenia()}} variant="secondary" size="sm">See all</Button>
           </Col>
         </Row>
       </Card.Header>
@@ -392,7 +393,7 @@ export const PageRozliczeniaNaMoimAucieTable = (props) => {
             </tr>
           </thead>
           <tbody>
-            {rozliczenia.map(rozliczenie => <TableRow key={rozliczenie.id} {...rozliczenie} />)}
+            {rozliczenia.map(rozliczenie => <TableRow key={rozliczenie.id} rozliczenie={rozliczenie} {...props} />)}
           </tbody>
         </Table>
       </Card.Body>
@@ -402,8 +403,10 @@ export const PageRozliczeniaNaMoimAucieTable = (props) => {
 
 export const PageRozliczeniaNaSwoimAucieTable = (props) => {
   const { rozliczenia } = props.rozliczenia
+  const { setRozliczenia } = props
   const TableRow = (props) => {
-    const { imie,nazwisko, nrRej, email, uberAplikacja,uberGotowka, boltAplikacja,boltGotowka, freeNowAplikacja, freeNowGotowka, calyObrot, gotowkaRazem, dodatek, prowizjaBolt, rozliczenieZus, bonusy, podatek, zwrotFv, potracenia, napiwki, doWyplaty } = props;
+    const { imie,nazwisko, nrRej, email, uberAplikacja,uberGotowka, boltAplikacja,boltGotowka, freeNowAplikacja, freeNowGotowka, calyObrot, gotowkaRazem, dodatek, prowizjaBolt, rozliczenieZus, bonusy, podatek, zwrotFv, potracenia, napiwki, doWyplaty } = props.rozliczenie;
+    const { modyfikujRozliczenie } = props
     return (
       <tr>
         <td>
@@ -428,7 +431,7 @@ export const PageRozliczeniaNaSwoimAucieTable = (props) => {
         <td>{potracenia}</td>
         <td>{napiwki}</td>
         <td>{doWyplaty}</td>
-        <td><Button>Modyfikuj</Button></td>
+        <td onClick={(e)=>{modyfikujRozliczenie(props.rozliczenie)}}><Button>Modyfikuj</Button></td>
       </tr>
     );
   };
@@ -441,7 +444,7 @@ export const PageRozliczeniaNaSwoimAucieTable = (props) => {
             <h5>Rozliczenia Na Swoim Aucie</h5>
           </Col>
           <Col className="text-end">
-            <Button variant="secondary" size="sm">See all</Button>
+            <Button onClick={(e)=>setRozliczenia()} variant="secondary" size="sm">See all</Button>
           </Col>
         </Row>
       </Card.Header>
@@ -468,7 +471,7 @@ export const PageRozliczeniaNaSwoimAucieTable = (props) => {
             </tr>
           </thead>
           <tbody>
-            {rozliczenia.map(rozliczenie => <TableRow key={rozliczenie.id} {...rozliczenie} />)}
+            {rozliczenia.map(rozliczenie => <TableRow key={rozliczenie.id} rozliczenie={rozliczenie} {...props}/>)}
           </tbody>
         </Table>
       </Card.Body>

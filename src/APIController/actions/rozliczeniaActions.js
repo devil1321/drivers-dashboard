@@ -1,17 +1,14 @@
-import { SET_IS_ROZLICZ_SHOW,SAVE_ROZLICZENIE,SET_ROZLICZENIE, SET_ROZLICZENIA,HANDLE_CHANGE_ROZLICZENIE, SET_ALL_USER_ROZLICZENIA, HANDLE_MODIFY_ROZLICZENIA } from '../../APIController/actions/types'
+import { SET_IS_ROZLICZ_SHOW,MODYFIKUJ_ROZLICZENIE,SAVE_ROZLICZENIE,SET_ROZLICZENIE, SET_ROZLICZENIA,HANDLE_CHANGE_ROZLICZENIE, SET_ALL_USER_ROZLICZENIA, HANDLE_MODIFY_ROZLICZENIA } from '../../APIController/actions/types'
 import  axios  from 'axios'
 import store from '../store'
 
-const setIsRozliczShow = () => dispatch =>{
-    return
-}
 
 const setRozliczenia = () => dispatch =>{
     axios.get('http://localhost:5000/rozliczenia')
     .then(res => {
         dispatch({
             type:SET_ROZLICZENIA,
-            payload:JSON.parse(res.data)
+            payload:res.data
         })
     })
     .catch(err => {if(err) throw err})
@@ -31,13 +28,27 @@ const setRozliczenie = () => dispatch =>{
 
 }
 
+const modyfikujRozliczenie = (rozliczenie) => dispatch =>{
+    dispatch({
+        type:MODYFIKUJ_ROZLICZENIE,
+        payload:rozliczenie
+    })
+}
+
 const setAllUserRozliczenia = (id) => dispatch => {
     axios.get('http://localhost:5000/rozliczenia/' + id)
     .then(res => {
-        dispatch({
-            type:SET_ALL_USER_ROZLICZENIA,
-            payload:JSON.parse(res.data)
-        })
+        if(res.data.length > 0){
+            dispatch({
+                type:SET_ALL_USER_ROZLICZENIA,
+                payload:res.data
+            })
+        }else{
+            dispatch({
+                type:SET_ALL_USER_ROZLICZENIA,
+                payload:[]
+            })
+        }
     })
     .catch(err => {if(err) throw err})
 }
@@ -68,10 +79,10 @@ const saveRozliczenie = (id) => dispatch =>{
 }
 
 export const rozliczeniaActions = {
-    setIsRozliczShow,
     setRozliczenia,
     setAllUserRozliczenia,
     handleChangeRozliczenie,
     saveRozliczenie,
-    setRozliczenie
+    setRozliczenie,
+    modyfikujRozliczenie
 }
