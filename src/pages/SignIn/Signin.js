@@ -15,7 +15,7 @@ import { userActions } from '../../APIController/actions/userActions'
 
 
 const Signin = (props) => {
-  
+  console.log(props)
   const history = useHistory()
   const { loginUser, setLoggedUser } = props
 
@@ -122,9 +122,6 @@ const Signin = (props) => {
   );
 };
 
-const mapStateToProps = state => ({
-  ...state
-})
 
 
-export default connect(mapStateToProps,userActions)(Signin)
+export default Signin

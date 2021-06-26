@@ -27,6 +27,8 @@ import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import Preloader from "../components/Preloader";
 
+import { withRedux } from '../APIController/withRedux'
+
 
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
@@ -37,7 +39,7 @@ const RouteWithLoader = ({ component: Component, ...rest }) => {
   }, []);
 
   return (
-   <Route {...rest} render={props => ( <> <Preloader show={loaded ? false : true} /> <Component {...props} /> </> ) } />
+   <Route {...rest} render={props => ( <> <Preloader show={loaded ? false : true} /><Component {...props} /> </> ) } />
   );
 };
 
@@ -78,27 +80,30 @@ const RouteWithSidebar = ({ component: Component, ...rest }) => {
   );
 };
 
+
+
+
 export default () => (
   <Switch>
     {/* pages */}
-    <RouteWithLoader exact path={Routes.Main.path} component={Signin} />
-    <RouteWithLoader exact path={Routes.Signin.path} component={Signin} />
-    <RouteWithLoader exact path={Routes.Signup.path} component={Signup} />
+    <RouteWithLoader exact path={Routes.Main.path} component={withRedux(Signin)} />
+    <RouteWithLoader exact path={Routes.Signin.path} component={withRedux(Signin)} />
+    <RouteWithLoader exact path={Routes.Signup.path} component={ withRedux(Signup)} />
     <RouteWithLoader exact path={Routes.ForgotPassword.path} component={ForgotPassword} />
     <RouteWithLoader exact path={Routes.ResetPassword.path} component={ResetPassword} />
     <RouteWithLoader exact path={Routes.Lock.path} component={Lock} />
     <RouteWithLoader exact path={Routes.NotFound.path} component={NotFoundPage} />
     <RouteWithLoader exact path={Routes.ServerError.path} component={ServerError} />
     {/* dashboards */}
-    <RouteWithSidebar exact path={Routes.DashboardOverview.path} component={DashboardOverview} />
-    <RouteWithSidebar exact path={Routes.DashboardAdmin.path} component={DashboardAdmin} />
-    <RouteWithSidebar exact path={Routes.SendMail.path} component={SendMail} />
-    <RouteWithSidebar exact path={Routes.Messages.path} component={Messages} />
-    <RouteWithSidebar exact path={Routes.MyProfile.path} component={MyProfile} />
-    <RouteWithSidebar exact path={Routes.Faktury.path} component={FakturyMainTable} />
-    <RouteWithSidebar exact path={Routes.Rozliczenia.path} component={RozliczeniaMainTable} />
-    <RouteWithSidebar exact path={Routes.Kierowcy.path} component={KierowcyMainTable} />
-    <RouteWithSidebar exact path={Routes.Umowy.path} component={UmowyMainTable} />
+    <RouteWithSidebar exact path={Routes.DashboardOverview.path} component={ withRedux(DashboardOverview)} />
+    <RouteWithSidebar exact path={Routes.DashboardAdmin.path} component={ withRedux(DashboardAdmin)} />
+    <RouteWithSidebar exact path={Routes.SendMail.path} component={ withRedux(SendMail)} />
+    <RouteWithSidebar exact path={Routes.Messages.path} component={ withRedux(Messages)} />
+    <RouteWithSidebar exact path={Routes.MyProfile.path} component={ withRedux(MyProfile)} />
+    <RouteWithSidebar exact path={Routes.Faktury.path} component={ withRedux(FakturyMainTable)} />
+    <RouteWithSidebar exact path={Routes.Rozliczenia.path} component={ withRedux(RozliczeniaMainTable)} />
+    <RouteWithSidebar exact path={Routes.Kierowcy.path} component={ withRedux(KierowcyMainTable)} />
+    <RouteWithSidebar exact path={Routes.Umowy.path} component={ withRedux(UmowyMainTable)} />
 
     <Redirect to={Routes.NotFound.path} />
   </Switch>

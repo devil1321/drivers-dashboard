@@ -189,10 +189,11 @@ export const GeneralInfoForm = (props) => {
 };
 
 export const RozliczeniaNaMoimAucieForm = (props) =>{
-  const { imie,nazwisko, nrRej, email, uberAplikacja,uberGotowka, boltAplikacja,boltGotowka, freeNowAplikacja, freeNowGotowka, calyObrot, gotowkaRazem,napiwek,bonusy,potracenia,dodatek,premia,kwotaKoncowa_1,kwotaKoncowa_2, doWyplaty } = props;
+  const { uberAplikacja,uberGotowka, boltAplikacja,boltGotowka, freeNowAplikacja, freeNowGotowka, calyObrot, gotowkaRazem,napiwek,bonusy,potracenia,dodatek,premia,kwotaKoncowa_1,kwotaKoncowa_2, doWyplaty } = props;
+  const {imie, nazwisko, email, nrRej } = props.users.selectedUser
   return(
     <>
-    <h2 className="my-4 text-center">Modyfikuj Kierowcę</h2>
+    <h2 className="my-4 text-center">Rozlicz Kierowcę</h2>
     <Card border="light" className="bg-white shadow-sm mb-4">
       <Card.Body>
         <Form>
@@ -316,7 +317,7 @@ export const RozliczeniaNaMoimAucieForm = (props) =>{
             </Col>
             <Col>
               <Form.Group id="do-wyplaty">
-                <Form.Label>Do Wypłate</Form.Label>
+                <Form.Label>Do Wypłaty</Form.Label>
                 <Form.Control required type="text" placeholder="Podaj Wypłate" value={doWyplaty}/>
               </Form.Group>
             </Col>
@@ -331,10 +332,12 @@ export const RozliczeniaNaMoimAucieForm = (props) =>{
 }
 
 export const RozliczeniaNaSwoimAucieForm = (props) =>{
-  const { imie,nazwisko, email, uberAplikacja,uberGotowka, boltAplikacja,boltGotowka, freeNowAplikacja, freeNowGotowka, calyObrot, gotowkaRazem, dodatek, prowizjaBolt, rozliczenieZus, bonusy, podatek, zwrotFv, potracenia, napiwki, doWyplaty } = props;
+  const { uberAplikacja,uberGotowka, boltAplikacja,boltGotowka, freeNowAplikacja, freeNowGotowka, calyObrot, gotowkaRazem, dodatek, prowizjaBolt, rozliczenieZus, bonusy, podatek, zwrotFv, potracenia, napiwki, doWyplaty } = props;
+  const {imie, nazwisko, email } = props.users.selectedUser
+
   return(
     <>
-    <h2 className="my-4 text-center">Modyfikuj Kierowcę</h2>
+    <h2 className="my-4 text-center">Rozlicz Kierowcę</h2>
     <Card border="light" className="bg-white shadow-sm mb-4">
     <Card.Body>
       <Form>

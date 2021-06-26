@@ -13,12 +13,6 @@ import { DataContext } from '../../APIController/data'
 
 import axios from 'axios'
 
-import { connect } from 'react-redux'
-import { userActions } from '../../APIController/actions/userActions'
-import { umowyActions } from '../../APIController/actions/umowyActions'
-import { fakturyActions } from '../../APIController/actions/fakturyActions'
-import { rozliczeniaActions } from '../../APIController/actions/rozliczeniaActions'
-
 
 const DashboardOverview = (props) => {
 
@@ -242,8 +236,10 @@ const DashboardOverview = (props) => {
                       </Col>
                     </Form.Group>
                   </Form>
-                  <PageRozliczeniaNaMoimAucieTable rozliczenia={rozliczenia}/>
-                  <PageRozliczeniaNaSwoimAucieTable rozliczenia={rozliczenia}/>
+                  {user.auto 
+                    ? <PageRozliczeniaNaMoimAucieTable {...props}/>
+                    : <PageRozliczeniaNaSwoimAucieTable {...props}/>
+                  }
               </Tab.Pane>
 
               <Tab.Pane eventKey="umowy" className="py-4">
@@ -349,10 +345,4 @@ const DashboardOverview = (props) => {
   );
 };
 
-const mapStateToProps = state => ({
-  ...state
-})
-
-const actions = Object.assign({}, umowyActions,fakturyActions,userActions,rozliczeniaActions)
-
-export default connect(mapStateToProps,actions)(DashboardOverview)
+export default DashboardOverview

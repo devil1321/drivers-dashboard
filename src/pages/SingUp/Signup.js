@@ -10,10 +10,8 @@ import axios from 'axios'
 import { Routes } from "../../routes";
 import BgImage from "../../assets/img/illustrations/signin.svg";
 
-import { connect } from 'react-redux'
-import { userActions } from '../../APIController/actions/userActions'
 
-const Singup = (props) => {
+const Signup = (props) => {
   const history = useHistory()
   const [show,setShow] = useState(false)
   const [errors,setErrors] = useState([])
@@ -209,9 +207,4 @@ const Singup = (props) => {
     </main>
   );
 };
-
-const mapStateToProps = (state) =>({
-  ...state
-})
-
-export default connect(mapStateToProps,userActions)(Singup)
+export default Signup

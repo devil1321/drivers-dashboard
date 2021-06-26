@@ -11,6 +11,7 @@ import { RozliczeniaNaMoimAucieForm, RozliczeniaNaSwoimAucieForm } from '../../c
 
 import { DataContext } from '../../APIController/data'
 
+
 import axios from 'axios'
 
 import { connect } from 'react-redux'
@@ -36,13 +37,14 @@ const DashboardAdmin = (props) => {
 
 
   const { handleShowUser, handleSetUser } = useContext(DataContext)
-  const { user, users } = props.users
+  const { user, users,loggedUser,selectedUser } = props.users
   const { faktury } = props.faktury
   const { umowy } = props.umowy
   const { rozliczenia } = props.rozliczenia
   
-  const [usersOptions,setUserOptions] = useState(users)
   const { setFaktury, setRozliczenia, setUmowy, setUsers ,setUser, handleActiveUser, handleDeleteUser, filterUsersById } = props
+  const [usersOptions,setUserOptions] = useState(users)
+  const [isSet,setIsSet] = useState(false)
   
 
 
@@ -50,12 +52,15 @@ const DashboardAdmin = (props) => {
  
   useEffect(()=>{
     setFaktury() 
-    // setRozliczenia()
+    setRozliczenia()
     setUmowy()
     setUsers()
     setUser()
-    setUserOptions(users)
-  },[])
+    if(!isSet && users.length > 0){
+      setUserOptions(users.filter(user => user._id !== loggedUser._id))
+      setIsSet(true)
+    }
+  },[isRozliczShow])
 
   return (
     <>
@@ -223,9 +228,9 @@ const DashboardAdmin = (props) => {
                 <Form className="mt-4">
                   <Form.Group className="mb-2">
                       <Form.Label>Wybierz Kierowcę</Form.Label>
-                      <Form.Select id="state" defaultValue="0">
+                      <Form.Select id="state" defaultValue="0" onChange={(e)=>{filterUsersById(e.target.value)}}>
                       {usersOptions.map(user =>{
-                            return <option>{user.imie} {user.nazwisko}</option>
+                            return <option value={user._id}>{user.imie} {user.nazwisko}</option>
                           })}
                       </Form.Select>
                     </Form.Group>
@@ -243,8 +248,12 @@ const DashboardAdmin = (props) => {
                       </Col>
                     </Form.Group>
                   </Form>
-                  <PageRozliczeniaNaMoimAucieTable rozliczenia={rozliczenia}/>
-                  <PageRozliczeniaNaSwoimAucieTable rozliczenia={rozliczenia}/>
+                  {selectedUser.auto 
+                    ? <PageRozliczeniaNaMoimAucieTable {...props}/>
+                    : <PageRozliczeniaNaSwoimAucieTable {...props}/>
+                  }
+                  
+
                   </React.Fragment>}
                   {isFakturyShow && 
                   <React.Fragment>
@@ -264,7 +273,7 @@ const DashboardAdmin = (props) => {
                 {isRozliczShow && 
                 <React.Fragment>
                 <Form className="mt-4">
-                  <h2 className="text-center">Rozlicz Kierowcę</h2>
+                  <h2 className="text-center">Prześlij Fakture</h2>
                   <Form.Group className="mb-3">
                     <Form.Label>Prześlij Plik Faktury</Form.Label>
                     <InputGroup>
@@ -305,6 +314,10 @@ const DashboardAdmin = (props) => {
                       <Button variant="primary" type="submit">Prześlij</Button>
                     </div>
                 </Form>
+                {selectedUser.auto 
+                  ? <RozliczeniaNaMoimAucieForm {...props} />
+                  : <RozliczeniaNaSwoimAucieForm {...props}/>
+                }
                 </React.Fragment>}
         </Col>
       </Row>
@@ -313,26 +326,19 @@ const DashboardAdmin = (props) => {
         <Col>
         {isModyfikujShow && 
           <React.Fragment>
-            <RozliczeniaNaMoimAucieForm />
-            <RozliczeniaNaSwoimAucieForm />
+          {selectedUser.auto 
+            ? <RozliczeniaNaMoimAucieForm {...props} />
+            : <RozliczeniaNaSwoimAucieForm {...props}/>
+          }
           </React.Fragment>}
         </Col>
       </Row>
 
-    
-       
- 
- 
     </>
   );
 };
 
 
-const mapStateToProps = state => ({
-  ...state
-})
-
-const actions = Object.assign({}, umowyActions,fakturyActions,userActions,rozliczeniaActions)
 
 
-export default connect(mapStateToProps,actions)(DashboardAdmin)
+export default DashboardAdmin

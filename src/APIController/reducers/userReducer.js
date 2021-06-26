@@ -3,7 +3,8 @@ import axios from 'axios'
 const initData = {
     user:{},
     users:[],
-    loggedUser:{}
+    loggedUser:{},
+    selectedUser:{}
 }
 
 export default (state = initData,action)=>{
@@ -67,7 +68,8 @@ export default (state = initData,action)=>{
             case FILTER_USERS_BY_ID:
                 return{
                     ...state,
-                    users:action.payload
+                    users:action.payload,
+                    selectedUser:action.payload[0]
                 }
             case HANDLE_SHOW_USER:
                 return{

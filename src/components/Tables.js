@@ -326,7 +326,7 @@ return (
 
 
 export const PageRozliczeniaNaMoimAucieTable = (props) => {
-  const { rozliczenia } = props
+  const { rozliczenia } = props.rozliczenia
   
   const TableRow = (props) => {
     const { imie, nazwisko, nrRej, email, uberAplikacja, uberGotowka, boltAplikacja, boltGotowka, freeNowAplikacja, freeNowGotowka, calyObrot, gotowkaRazem, napiwek, bonusy, potracenia, dodatek, premia, kwotaKoncowa, doWyplaty } = props;
@@ -401,7 +401,7 @@ export const PageRozliczeniaNaMoimAucieTable = (props) => {
 };
 
 export const PageRozliczeniaNaSwoimAucieTable = (props) => {
-  const { rozliczenia } = props
+  const { rozliczenia } = props.rozliczenia
   const TableRow = (props) => {
     const { imie,nazwisko, nrRej, email, uberAplikacja,uberGotowka, boltAplikacja,boltGotowka, freeNowAplikacja, freeNowGotowka, calyObrot, gotowkaRazem, dodatek, prowizjaBolt, rozliczenieZus, bonusy, podatek, zwrotFv, potracenia, napiwki, doWyplaty } = props;
     return (

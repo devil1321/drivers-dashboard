@@ -9,16 +9,6 @@ import Profile3 from "../../assets/img/team/profile-picture-3.jpg";
 import { profile } from "../../data/profile";
 import axios from 'axios'
 
-import {DataContext} from '../../APIController/data'
-
-
-import { connect } from 'react-redux'
-import { userActions } from '../../APIController/actions/userActions'
-import { umowyActions } from '../../APIController/actions/umowyActions'
-import { fakturyActions } from '../../APIController/actions/fakturyActions'
-import { rozliczeniaActions } from '../../APIController/actions/rozliczeniaActions'
-
-
 
 const MyProfile = (props) => {
   const { setUser,handleChangeUser } = props
@@ -58,11 +48,4 @@ const MyProfile = (props) => {
 };
 
 
-const mapStateToProps = state => ({
-  ...state
-})
-
-const actions = Object.assign({}, umowyActions,fakturyActions,userActions,rozliczeniaActions)
-
-
-export default connect(mapStateToProps,actions)(MyProfile)
+export default MyProfile
