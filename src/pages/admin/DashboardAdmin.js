@@ -42,7 +42,7 @@ const DashboardAdmin = (props) => {
   const { umowy } = props.umowy
   const { rozliczenia } = props.rozliczenia
   
-  const { setFaktury, setRozliczenia, setUmowy, setUsers ,setUser, handleActiveUser, handleDeleteUser, filterUsersById } = props
+  const { setFaktury,setSelectedUser, setRozliczenia, setUmowy, setUsers ,setUser, handleActiveUser, handleDeleteUser, filterUsersById } = props
   const [usersOptions,setUserOptions] = useState(users)
   const [isSet,setIsSet] = useState(false)
   
@@ -59,6 +59,7 @@ const DashboardAdmin = (props) => {
     if(!isSet && users.length > 0){
       setUserOptions(users.filter(user => user._id !== loggedUser._id))
       setIsSet(true)
+      setSelectedUser(users[0])
     }
   },[isRozliczShow])
 

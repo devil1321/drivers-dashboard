@@ -1,4 +1,4 @@
-import { SET_USER, SET_USER_BY_ID, SET_USERS,FILTER_USERS_BY_ID,REGISTER_USER,HANDLE_DELETE_USER,LOGIN_USER, MODIFY_USER,HANDLE_ACTIVE_USER,MODIFY_PROFILE,HANDLE_CHANGE_USER, HANDLE_USER, HANDLE_SHOW_USER, HANDLE_SHOW_ALL_USERS } from '../actions/types'
+import { SET_USER,SET_SELECTED_USER, SET_USER_BY_ID, SET_USERS,FILTER_USERS_BY_ID,REGISTER_USER,HANDLE_DELETE_USER,LOGIN_USER, MODIFY_USER,HANDLE_ACTIVE_USER,MODIFY_PROFILE,HANDLE_CHANGE_USER, HANDLE_USER, HANDLE_SHOW_USER, HANDLE_SHOW_ALL_USERS } from '../actions/types'
 import axios from 'axios'
 const initData = {
     user:{},
@@ -19,6 +19,11 @@ export default (state = initData,action)=>{
                 return{
                     ...state,
                     user:action.payload
+                }
+            case SET_SELECTED_USER: 
+                return{
+                    ...state,
+                    selectedUser:action.payload
                 }
             case REGISTER_USER:
                 return {

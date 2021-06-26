@@ -1,6 +1,13 @@
-import { SET_USER,SET_USER_BY_ID,MODIFY_USER,MODIFY_PROFILE,FILTER_USERS_BY_ID,HANDLE_DELETE_USER,HANDLE_ACTIVE_USER,HANDLE_CHANGE_USER,REGISTER_USER,LOGIN_USER, SET_USERS, SET_LOGGED_USER, HANDLE_USER,SET_IS_ROZLICZ_SHOW, HANDLE_SHOW_USER, HANDLE_SHOW_ALL_USERS } from '../../APIController/actions/types'
+import { SET_USER,SET_SELECTED_USER,SET_USER_BY_ID,MODIFY_USER,MODIFY_PROFILE,FILTER_USERS_BY_ID,HANDLE_DELETE_USER,HANDLE_ACTIVE_USER,HANDLE_CHANGE_USER,REGISTER_USER,LOGIN_USER, SET_USERS, SET_LOGGED_USER, HANDLE_USER,SET_IS_ROZLICZ_SHOW, HANDLE_SHOW_USER, HANDLE_SHOW_ALL_USERS } from '../../APIController/actions/types'
 import axios from 'axios'
 import store from '../store'
+
+const setSelectedUser = (user) => dispatch =>{
+    dispatch({
+        type:SET_SELECTED_USER,
+        payload:user
+    })
+}
 
 const setUserById = (id) => dispatch =>{
     axios.get('http://localhost:5000/users' + id)
@@ -208,6 +215,7 @@ export const userActions = {
     handleUser,
     handleChangeUser,
     showUser,
+    setSelectedUser,
     showAllUsers,
     handleActiveUser,
     handleDeleteUser,
